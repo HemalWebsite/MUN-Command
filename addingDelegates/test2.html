@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Bootstrap Css -->
+    <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.css">
+
+    <title>Chairs Portal</title>
+
+    <!-- Refresh -->
+    <meta http-equiv="refresh" content="60">
+
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+
+    <!-- Firebase Initialization -->
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+    apiKey: "AIzaSyAR4U60XWS8cwDVspszxmE4xdWjIfENDCs",
+    authDomain: "muntest-8e5d7.firebaseapp.com",
+    projectId: "muntest-8e5d7",
+    storageBucket: "muntest-8e5d7.appspot.com",
+    messagingSenderId: "644505644686",
+    appId: "1:644505644686:web:813ac71b3630aad45963df",
+    measurementId: "G-D1ENZ6FBFB"
+  };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+
+    <!-- Styling -->
+    <style>
+        .dropdown-item {
+            padding-left: 0px;
+            background-color: white;
+            font-size: 15px;
+            color: lightslategrey;
+        }
+        .dropdown-menu {
+            background-color: white;
+            margin-left: 20px;
+            border: none;
+        }
+        body {
+            background-color: whitesmoke;
+            display: flex;
+        }
+        .navbar {
+            height: 100vh;
+            width: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: white;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            transition: width 0.3s;
+            z-index: 1040; /* Ensure it's on top */
+            overflow-x: hidden;
+        }
+        .navbar.expanded {
+            width: 250px;
+        }
+        .navbar-brand {
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        .navbar-nav {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .navbar.expanded .navbar-nav {
+            opacity: 1;
+        }
+        .nav-link {
+            text-align: left;
+            width: 100%;
+            padding-left: 20px;
+        }
+        .container {
+            margin-left: 60px; /* Adjust this value based on your navbar width */
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .navbar-toggler {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .hidden-info {
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .comment-box, .report-box {
+            width: 100%;
+            height: 50px;
+        }
+        .timer {
+            font-size: 2rem;
+        }
+        .speaker-list {
+            display: flex;
+            flex-direction: column;
+        }
+        .speaker-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <h1>Login</h1>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="login-error" style="color: red;"></p>
+    </div>
+
+    <nav class="navbar hidden" id="sidebar">
+        <a class="navbar-brand" href="#">
+            <img src="images/download.png" alt="" style="width: 40px;" class="img-fluid" id="navbarImage">
+        </a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showDelegates">Delegates</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showRuntimeEnvironment">Runtime Environment</a>
+            </li>
+        </ul>
+        <button class="navbar-toggler" type="button" id="toggleButton" aria-expanded="false" aria-label="Toggle navigation" style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    
+    <div class="container hidden" id="mainContent">
+        <div id="contentDelegates" style="display: none;">
+            <h1>Delegates</h1>
+            <table class="table table-striped table-hover my-4">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">School</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Committee</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">Total Points</th>
+                        <th scope="col">Details</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="list-table-body">
+                    <!-- Table rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="contentRuntime" style="display: none;">
+            <h1>Runtime Environment</h1>
+            <!-- Added the runtime environment HTML here -->
+            <div class="dropdown">
+                <button class="dropdown-trigger" onclick="toggleDropdown()">▼</button>
+                <div class="dropdown-content" style="display: none;">
+                    <p class="agenda">Agenda</p>
+                    <input type="search" id="inputAgenda" placeholder="Enter Agenda">
+                    <button onclick="SetAgenda(),toggleDropdown()">Set</button>
+                </div>
+            </div>
+            
+            <p class="agendadisplay"></p>
+            <label for="inputTime">Enter time in seconds per speaker:</label>
+            <input type="number" id="inputTime" placeholder="Enter time" />
+            <button id="startButton" onclick="startSpeech()">Start</button>
+            <button id="pauseButton" onclick="pauseSpeech()">Pause</button>
+            <button id="nextButton" onclick="nextSpeaker()">Next</button>
+            <p>
+                <span id="countdown">--</span> 
+                <span id="originalTime">--</span>
+            </p>
+            
+            <div>
+                <p>Current Speaker:</p>
+                <div class="currentSpeaker"></div>
+                <p></p>
+                <p>Upcoming Speakers:</p>
+                <div class="upcomingSpeaker speaker-list"></div>
+            </div>
+            
+            <div>
+                <input type="search" id="countryAdd" placeholder="Enter Speakers List" class="countryAdd">
+                <button onclick="addNewCountry()">Enter</button>
+                <input type="number" placeholder="max no. of speakers" class="maxSpeakers">
+                <input type="number" placeholder="speakers left in speakers list" class="remainingSpeakers">
+            </div>
+            <ul id="countryList">
+            </ul>
+        </div>
+    </div>
+
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="timer.js" defer></script>
+    <script src="speakersList.js"></script>
+    <script>
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'flex';
+            } else {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var sidebar = document.getElementById('sidebar');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (!sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        function closeSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            navLinks.style.display = 'none';
+        }
+
+        document.getElementById('showDelegates').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'block';
+            document.getElementById('contentRuntime').style.display = 'none';
+            closeSidebar();
+        });
+
+        document.getElementById('showRuntimeEnvironment').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'block';
+            closeSidebar();
+        });
+
+        function toggleDropdown() {
+            var dropdownContent = document.querySelector('.dropdown-content');
+            dropdownContent.style.display = dropdownContent.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function SetAgenda() {
+            var agenda = document.getElementById('inputAgenda').value;
+            document.querySelector('.agendadisplay').innerText = agenda;
+        }
+
+        let countdownTimer;
+        let originalTime;
+        let currentSpeakerIndex = 0;
+
+        function startSpeech() {
+            const currentSpeaker = document.querySelector('.currentSpeaker');
+            const upcomingSpeaker = document.querySelector('.upcomingSpeaker');
+            const countryList = document.getElementById('countryList');
+            const timeInput = document.getElementById('inputTime').value;
+
+            originalTime = timeInput;
+            document.getElementById('originalTime').innerText = `Original Time: ${originalTime} seconds`;
+
+            if (countryList.children.length > 0) {
+                // Move the first country to the current speaker
+                const firstCountry = countryList.children[0];
+                currentSpeaker.innerHTML = `${firstCountry.innerText} <button onclick="removeSpeaker('current')">X</button>`;
+                updateUpcomingSpeakers();
+
+                // Start the countdown timer
+                startCountdown(timeInput);
+                countryList.removeChild(firstCountry);
+            } else {
+                alert('No speakers in the list');
+            }
+        }
+
+        function startCountdown(seconds) {
+            clearInterval(countdownTimer);
+            let remainingTime = seconds;
+            document.getElementById('countdown').innerText = `Time left: ${remainingTime} seconds`;
+
+            countdownTimer = setInterval(() => {
+                remainingTime--;
+                document.getElementById('countdown').innerText = `Time left: ${remainingTime} seconds`;
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownTimer);
+                    alert('Time is up!');
+                    incrementSpeaker();
+                }
+            }, 1000);
+        }
+
+        function incrementSpeaker() {
+            const currentSpeaker = document.querySelector('.currentSpeaker');
+            if (currentSpeaker.innerText !== '') {
+                const speakerCountry = currentSpeaker.innerText.split(' ')[0];
+                db.collection('delegates').where('country', '==', speakerCountry).get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const delegate = doc.data();
+                        db.collection('delegates').doc(doc.id).update({
+                            speech: delegate.speech + 1
+                        });
+                    });
+                });
+                nextSpeaker();
+            }
+        }
+
+        function nextSpeaker() {
+            const currentSpeaker = document.querySelector('.currentSpeaker');
+            const countryList = document.getElementById('countryList');
+            const timeInput = originalTime;
+
+            if (countryList.children.length > 0) {
+                const nextCountry = countryList.children[0];
+                currentSpeaker.innerHTML = `${nextCountry.innerText} <button onclick="removeSpeaker('current')">X</button>`;
+                countryList.removeChild(nextCountry);
+                updateUpcomingSpeakers();
+                startCountdown(timeInput);
+            } else {
+                currentSpeaker.innerHTML = '';
+                document.getElementById('countdown').innerText = '--';
+                document.getElementById('originalTime').innerText = '--';
+            }
+        }
+
+        function updateUpcomingSpeakers() {
+            const upcomingSpeaker = document.querySelector('.upcomingSpeaker');
+            const countryList = document.getElementById('countryList');
+            upcomingSpeaker.innerHTML = '';
+
+            for (let i = 0; i < countryList.children.length; i++) {
+                const country = countryList.children[i].innerText;
+                const li = document.createElement('li');
+                li.className = 'speaker-item';
+                li.innerHTML = `${country} <button onclick="removeSpeaker('${i}')">X</button>`;
+                upcomingSpeaker.appendChild(li);
+            }
+        }
+
+        function removeSpeaker(index) {
+            const countryList = document.getElementById('countryList');
+            if (index === 'current') {
+                document.querySelector('.currentSpeaker').innerHTML = '';
+                document.getElementById('countdown').innerText = '--';
+                document.getElementById('originalTime').innerText = '--';
+            } else {
+                countryList.removeChild(countryList.children[index]);
+                updateUpcomingSpeakers();
+            }
+        }
+
+        function addNewCountry() {
+            const countryInput = document.getElementById('countryAdd').value;
+            if (validCountries.includes(countryInput)) {
+                // Add country to the speakers list
+                const li = document.createElement('li');
+                li.className = 'speaker-item';
+                li.innerHTML = `${countryInput} <button onclick="removeSpeaker('upcoming', ${countryList.children.length})">X</button>`;
+                document.getElementById('countryList').appendChild(li);
+                document.getElementById('countryAdd').value = ''; // Clear input
+                updateUpcomingSpeakers();
+            } else {
+                alert('Invalid country. Please enter a valid country from the delegates list.');
+            }
+        }
+
+        let validCountries = [];
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Get user data from Firestore
+                    db.collection('users').doc(user.uid).get().then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            const committee = userData.committee;
+                            // Show the sidebar and main content
+                            document.getElementById('login-container').style.display = 'none';
+                            document.getElementById('sidebar').classList.remove('hidden');
+                            document.getElementById('mainContent').classList.remove('hidden');
+                            // Load delegates for the user's committee
+                            loadDelegates(committee);
+                        } else {
+                            console.log('No such document!');
+                        }
+                    }).catch((error) => {
+                        console.log('Error getting document:', error);
+                    });
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById('login-error').innerText = errorMessage;
+                });
+        }
+
+        function loadDelegates(committee) {
+            document.getElementById('contentDelegates').style.display = 'block';
+            document.getElementById('contentRuntime').style.display = 'none';
+
+            const delegatesRef = firebase.firestore().collection(committee);
+            delegatesRef.get().then((querySnapshot) => {
+                const tableBody = document.getElementById('list-table-body');
+                tableBody.innerHTML = ''; // Clear previous rows
+                validCountries = []; // Clear previous countries
+                let rowIndex = 1; // Initialize row index for sequential numbering
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    const row = `<tr>
+                        <td>${rowIndex++}</td> <!-- Sequential numbering -->
+                        <td>${delegate.firstName}</td> <!-- Assuming 'firstName' is the field name -->
+                        <td>${delegate.lastName}</td>
+                        <td>${delegate.school}</td>
+                        <td>${delegate.email}</td>
+                        <td>${delegate.grade}</td>
+                        <td>${delegate.committee}</td>
+                        <td>${delegate.country}</td>
+                        <td>${delegate.points}</td>
+                        <td><button onclick="toggleDetails('${doc.id}', '${committee}')">Details</button></td>
+                        <td><button onclick="deleteDelegate('${doc.id}', '${committee}')">Delete</button></td>
+                    </tr>
+                    <tr class="hidden-info" id="details-${doc.id}">
+                        <td colspan="11">
+                            <div>
+                                <p>No. Total times spoken: ${delegate.points}</p>
+                                <p>POI's: ${delegate.POI}</p>
+                                <p>Speeches: ${delegate.speech}</p>
+                                <textarea class="comment-box" placeholder="Comments" onchange="saveComment('${doc.id}', '${committee}', this.value)">${delegate.comments || ''}</textarea>
+                                <textarea class="report-box" placeholder="Report" onchange="saveReport('${doc.id}', '${committee}', this.value)">${delegate.report || ''}</textarea>
+                            </div>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row; // Append row to table
+                    validCountries.push(delegate.country); // Add country to valid countries list
+                });
+            }).then(() => {
+                closeSidebar();
+            });
+        }
+
+        function toggleDetails(docId, committee) {
+            const detailsRow = document.getElementById(`details-${docId}`);
+            if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+                detailsRow.style.display = 'table-row';
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        }
+
+        function deleteDelegate(docId, committee) {
+            db.collection(committee).doc(docId).delete().then(() => {
+                console.log('Delegate successfully deleted');
+                loadDelegates(committee); // Refresh the list of delegates
+            }).catch((error) => {
+                console.error('Error removing delegate: ', error);
+            });
+        }
+
+        function saveComment(docId, committee, comment) {
+            db.collection(committee).doc(docId).update({
+                comments: comment
+            }).then(() => {
+                console.log('Comment saved');
+            }).catch((error) => {
+                console.error('Error saving comment: ', error);
+            });
+        }
+
+        function saveReport(docId, committee, report) {
+            db.collection(committee).doc(docId).update({
+                report: report
+            }).then(() => {
+                console.log('Report saved');
+            }).catch((error) => {
+                console.error('Error saving report: ', error);
+            });
+        }
+    </script>
+</body>
+</html>

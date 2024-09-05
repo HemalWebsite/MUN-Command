@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html> 
+    loadChatMessages
+<head>
+    <!-- Bootstrap Css -->
+    <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.css">
+    <title>Chairs Portal</title>
+    <!-- Refresh -->
+    <meta http-equiv="refresh" content="600">
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <!-- Firebase Initialization -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAR4U60XWS8cwDVspszxmE4xdWjIfENDCs",
+            authDomain: "muntest-8e5d7.firebaseapp.com",
+            projectId: "muntest-8e5d7",
+            storageBucket: "muntest-8e5d7.appspot.com",
+            messagingSenderId: "644505644686",
+            appId: "1:644505644686:web:813ac71b3630aad45963df",
+            measurementId: "G-D1ENZ6FBFB"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+    <!-- Styling -->
+    <style>
+        .dropdown-item {
+            padding-left: 0px;
+            background-color: white;
+            font-size: 15px;
+            color: lightslategrey;
+        }
+
+        .dropdown-menu {
+            background-color: white;
+            margin-left: 20px;
+            border: none;
+        }
+
+        body {
+            background-color: whitesmoke;
+            display: flex;
+        }
+
+        .navbar {
+            height: 100vh;
+            width: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: white;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            transition: width 0.3s;
+            z-index: 1040;
+            overflow-x: hidden;
+        }
+
+        .navbar.expanded {
+            width: 250px;
+        }
+
+        .navbar-brand {
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .navbar-nav {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .navbar.expanded .navbar-nav {
+            opacity: 1;
+        }
+
+        .nav-link {
+            text-align: left;
+            width: 100%;
+            padding-left: 20px;
+        }
+
+        .container {
+            margin-left: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .navbar-toggler {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .details-container {
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .details-container strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .details-container input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chat-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+            display: inline-block;
+            max-width: 80%;
+        }
+
+        .chat-sender {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 2px;
+        }
+        .sortButton {
+            background-color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="login-container">
+        <h1>Login</h1>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="login-error" style="color: red;"></p>
+    </div>
+
+    <nav class="navbar hidden" id="sidebar">
+        <a class="navbar-brand" href="#">
+            <img src="images/download.png" alt="" style="width: 40px;" class="img-fluid" id="navbarImage">
+        </a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showDelegates">Delegates</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showRuntimeEnvironment">Runtime Environment</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showAmendments">Amendments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showAttendance">Attendance</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showPOIs">POIs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showChat">Chat</a>
+            </li>
+        </ul>
+        <button class="navbar-toggler" type="button" id="toggleButton" aria-expanded="false" aria-label="Toggle navigation"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container hidden" id="mainContent">
+        <div id="contentDelegates" style="display: none;">
+            <h1>Delegates</h1>
+            <input type="text" id="searchBar" placeholder="Search delegates...">
+            <table class="table table-striped table-hover my-4">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First <button onclick="sortTable(1)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button></th>
+                        <th scope="col">Last <button onclick="sortTable(2)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button></th>
+                        <th scope="col">School <button onclick="sortTable(3)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button> </th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Grade <button onclick="sortTable(5)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button></th>
+                        <th scope="col">Committee</th>
+                        <th scope="col">Country <button onclick="sortTable(7)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button></th>
+                        <th scope="col">Total Points <button onclick="sortTable(8)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                          </svg></button></th>
+                        <th scope="col">Details</th>
+                    </tr>
+                </thead>
+                <tbody id="list-table-body">
+                    <!-- Table rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="contentRuntime" style="display: none;">
+            <h1>Runtime Environment</h1>
+            <div class="dropdown">
+                <button class="dropdown-trigger" onclick="toggleDropdown()">▼</button>
+                <div class="dropdown-content" style="display: none;">
+                    <p class="agenda">Agenda</p>
+                    <input type="search" id="inputAgenda" placeholder="Enter Agenda">
+                    <button onclick="SetAgenda(),toggleDropdown()">Set</button>
+                </div>
+            </div>
+
+            <p class="agendadisplay"></p>
+            <label for="inputTime">Enter time in seconds per speaker:</label>
+            <input type="number" id="inputTime" placeholder="Enter time" />
+            <button id="startButton" onclick="startSpeech()">Start</button>
+            <button id="pauseButton" onclick="pauseSpeech()">Pause</button>
+            <button id="endButton" onclick="endSpeech()">End</button>
+            <p>
+                <span id="countdown">--</span>
+                <span id="originalTime">--</span>
+            </p>
+
+            <div>
+                <p>Current Speaker:</p>
+                <div class="currentSpeaker"></div>
+                <p></p>
+                <p>Upcoming Speaker:</p>
+                <div class="upcomingSpeaker"></div>
+            </div>
+
+            <div>
+                <input type="search" id="countryAdd" placeholder="Enter Speakers List" class="countryAdd">
+                <button onclick="addNewCountry()">Enter</button>
+                <input type="number" placeholder="max no. of speakers" class="maxSpeakers">
+                <input type="number" placeholder="speakers left in speakers list" class="remainingSpeakers">
+            </div>
+            <ul id="countryList">
+            </ul>
+        </div>
+        <div id="contentAmendments" style="display: none;">
+            <h1>Amendments</h1>
+            <div>
+                <h3>New Amendments</h3>
+                <div>
+                    <input type="text" id="amendmentText" placeholder="Amendment...">
+                    <select id="amendmentType">
+                        <option value="Friendly">Friendly</option>
+                        <option value="Unfriendly">Unfriendly</option>
+                    </select>
+                    <input type="text" id="amendmentCountry" placeholder="Country">
+                    <button onclick="addAmendment()">Add Amendment</button>
+                </div>
+                <ul id="amendmentList"></ul>
+            </div>
+            <div>
+                <h3>Previous Amendments</h3>
+                <ul id="previousAmendmentList"></ul>
+            </div>
+        </div>
+        <div id="contentPOIs" style="display: none;">
+            <h1>Points of Information (POIs)</h1>
+            <div>
+                <input type="text" id="poiCountry" placeholder="Country">
+                <button onclick="addPOI()">Add POI</button>
+            </div>
+            <div>
+                <h3>Total POIs</h3>
+                <p id="totalPOIs">0</p>
+            </div>
+            <div>
+                <h3>POI List</h3>
+                <ul id="poiList"></ul>
+            </div>
+        </div>
+        <div id="contentAttendance" style="display: none;">
+            <h1>Attendance</h1>
+            <table class="table table-striped table-hover my-4">
+                <thead id="attendance-table-head">
+                    <!-- Headers will be added here dynamically -->
+                </thead>
+                <tbody id="attendance-table-body">
+                    <!-- Table rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="contentChat" style="display: none;">
+            <h1>Chat</h1>
+            <div class="chat-container" id="chatContainer"></div>
+            <div>
+                <input type="text" id="chatMessage" placeholder="Type a message">
+                <button onclick="sendMessageToSecretariat()">Send</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="timer.js" defer></script>
+    <script src="speakersList.js"></script>
+    <script>
+        document.getElementById('toggleButton').addEventListener('click', function () {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'flex';
+            } else {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var sidebar = document.getElementById('sidebar');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (!sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        function closeSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            navLinks.style.display = 'none';
+        }
+
+        document.getElementById('showDelegates').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'block';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadDelegates();
+        });
+
+        document.getElementById('showRuntimeEnvironment').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'block';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+        });
+
+        document.getElementById('showAmendments').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'block';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadAmendments();
+        });
+
+        document.getElementById('showAttendance').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'block';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadAttendance();
+        });
+
+        document.getElementById('showPOIs').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'block';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadPOIs();
+        });
+
+        document.getElementById('showChat').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'block';
+            closeSidebar();
+        });
+
+        function toggleDropdown() {
+            var dropdownContent = document.querySelector('.dropdown-content');
+            dropdownContent.style.display = dropdownContent.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function SetAgenda() {
+            var agenda = document.getElementById('inputAgenda').value;
+            document.querySelector('.agendadisplay').innerText = agenda;
+        }
+
+        function startSpeech() {
+            if (!currentSpeaker) {
+                alert('No current speaker');
+                return;
+            }
+            originalTime = document.getElementById('inputTime').value;
+            if (!originalTime || isNaN(originalTime)) {
+                alert('Please enter a valid time');
+                return;
+            }
+            countdown = originalTime;
+            document.getElementById('countdown').innerText = countdown;
+            document.getElementById('originalTime').innerText = originalTime;
+            interval = setInterval(function () {
+                countdown--;
+                document.getElementById('countdown').innerText = countdown;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    alert('Time is up');
+                    incrementSpeechCountAndMoveToNextSpeaker();
+                }
+            }, 1000);
+        }
+
+        function pauseSpeech() {
+            clearInterval(interval);
+        }
+
+        function endSpeech() {
+            clearInterval(interval);
+            incrementSpeechCountAndMoveToNextSpeaker();
+        }
+
+        let validCountries = [];
+        let currentSpeaker = null;
+        let interval;
+        let countdown;
+        let originalTime;
+
+        function addNewCountry() {
+            const countryInput = document.getElementById('countryAdd').value;
+            if (validCountries.includes(countryInput)) {
+                if (!currentSpeaker) {
+                    currentSpeaker = countryInput;
+                    document.querySelector('.currentSpeaker').innerHTML = countryInput + ' <button onclick="removeCurrentSpeaker()">X</button>';
+                } else {
+                    const li = document.createElement('li');
+                    li.innerHTML = countryInput + ' <button onclick="removeUpcomingSpeaker(this)">X</button>';
+                    document.querySelector('.upcomingSpeaker').appendChild(li);
+                }
+                document.getElementById('countryAdd').value = ''; // Clear input
+            } else {
+                alert('Invalid country. Please enter a valid country from the delegates list.');
+            }
+        }
+
+        function removeCurrentSpeaker() {
+            const currentSpeakerElement = document.querySelector('.currentSpeaker');
+            const upcomingSpeakersList = document.querySelector('.upcomingSpeaker');
+            if (currentSpeakerElement.firstChild) {
+                const removedSpeaker = currentSpeakerElement.firstChild.textContent.trim();
+                currentSpeakerElement.innerHTML = '';
+                currentSpeaker = null;
+                // Remove from upcoming speakers list if exists
+                Array.from(upcomingSpeakersList.children).forEach((item) => {
+                    if (item.textContent.trim().includes(removedSpeaker)) {
+                        upcomingSpeakersList.removeChild(item);
+                    }
+                });
+            }
+        }
+
+        function removeUpcomingSpeaker(button) {
+            const li = button.parentElement;
+            document.querySelector('.upcomingSpeaker').removeChild(li);
+        }
+
+        function incrementSpeechCountAndMoveToNextSpeaker() {
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+            const currentSpeakerElement = document.querySelector('.currentSpeaker');
+            const upcomingSpeakersList = document.querySelector('.upcomingSpeaker');
+            const nextSpeakerElement = upcomingSpeakersList.firstChild;
+
+            if (currentSpeaker) {
+                db.collection(committee).where('country', '==', currentSpeaker).get().then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const doc = querySnapshot.docs[0];
+                        const currentSpeechCount = doc.data().speech;
+                        db.collection(committee).doc(doc.id).update({
+                            speech: currentSpeechCount + 1
+                        }).then(() => {
+                            console.log('Speech count incremented for', currentSpeaker);
+                            updateDelegatePoints(doc.id, committee);
+                            if (nextSpeakerElement) {
+                                currentSpeaker = nextSpeakerElement.textContent.trim();
+                                currentSpeakerElement.innerHTML = currentSpeaker + ' <button onclick="removeCurrentSpeaker()">X</button>';
+                                upcomingSpeakersList.removeChild(nextSpeakerElement);
+                            } else {
+                                currentSpeaker = null;
+                                currentSpeakerElement.innerHTML = '';
+                            }
+                        }).catch((error) => {
+                            console.error('Error incrementing speech count:', error);
+                        });
+                    }
+                });
+            }
+        }
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Get user data from Firestore
+                    db.collection('users').doc(user.uid).get().then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            const committee = userData.committee;
+                            // Show the sidebar and main content
+                            document.getElementById('login-container').style.display = 'none';
+                            document.getElementById('sidebar').classList.remove('hidden');
+                            document.getElementById('mainContent').classList.remove('hidden');
+                            // Set committee for runtime environment
+                            document.getElementById('showRuntimeEnvironment').setAttribute('data-committee', committee);
+                            // Load delegates for the user's committee
+                            loadDelegates(committee);
+                        } else {
+                            console.log('No such document!');
+                        }
+                    }).catch((error) => {
+                        console.log('Error getting document:', error);
+                    });
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById('login-error').innerText = errorMessage;
+                });
+        }
+
+        function loadDelegates(committee) {
+            document.getElementById('contentDelegates').style.display = 'block';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+
+            const delegatesRef = firebase.firestore().collection(committee);
+            delegatesRef.get().then((querySnapshot) => {
+                const tableBody = document.getElementById('list-table-body');
+                tableBody.innerHTML = ''; // Clear previous rows
+                validCountries = []; // Clear previous countries
+                let rowIndex = 1; // Initialize row index for sequential numbering
+                let maxPoints = 0;
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    maxPoints = Math.max(maxPoints, delegate.points);
+                });
+
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    const totalSpeeches = delegate.POI + delegate.speech + delegate.amendments;
+                    const pickingOrder = totalSpeeches ? delegate.points / totalSpeeches : 0;
+                    const blueIntensity = pickingOrder ? Math.floor((pickingOrder / 10) * 255) : 255;
+                    const blueColor = `rgb(${255 - blueIntensity}, ${255 - blueIntensity}, 255)`;
+
+                    const row = `<tr style="background-color: ${blueColor}">
+                        <td>${rowIndex++}</td>
+                        <td>${delegate.firstName}</td>
+                        <td>${delegate.lastName}</td>
+                        <td>${delegate.school}</td>
+                        <td>${delegate.email}</td>
+                        <td>${delegate.grade}</td>
+                        <td>${delegate.committee}</td>
+                        <td>${delegate.country}</td>
+                        <td>${delegate.points}</td>
+                        <td><button onclick="toggleDetails('${doc.id}')" class="btn btn-">Details</button></td>
+                    </tr>
+                    <tr class="hidden-info" id="details-${doc.id}" style="display: none;">
+                        <td colspan="10">
+                            <div class="details-container">
+                                <strong>No. Total times spoken:</strong> <span>${totalSpeeches}</span><br>
+                                <strong>POI's:</strong> <span>${delegate.POI}</span><br>
+                                <strong>Speeches:</strong> <span>${delegate.speech}</span><br>
+                                <strong>Amendments:</strong> <span>${delegate.amendments || 0}</span><br>
+                                <strong>Friendly Amendments:</strong> <span>${delegate.friendlyAmendments || 0}</span><br>
+                                <strong>Comments:</strong> <input type="text" value="${delegate.comments || ''}" onchange="saveComments('${doc.id}', this.value, '${committee}')"><br>
+                                <strong>Report:</strong> <input type="text" value="${delegate.report || ''}" onchange="saveReport('${doc.id}', this.value, '${committee}')">
+                            </div>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row; // Append row to table
+                    validCountries.push(delegate.country); // Add country to valid countries list
+                });
+            }).then(() => {
+                closeSidebar();
+            });
+        }
+
+        function saveComments(docId, comments, committee) {
+            db.collection(committee).doc(docId).update({
+                comments: comments
+            }).then(() => {
+                console.log('Comments saved');
+            }).catch((error) => {
+                console.error('Error saving comments: ', error);
+            });
+        }
+
+        function saveReport(docId, report, committee) {
+            db.collection(committee).doc(docId).update({
+                report: report
+            }).then(() => {
+                console.log('Report saved');
+            }).catch((error) => {
+                console.error('Error saving report: ', error);
+            });
+        }
+
+        function toggleDetails(docId) {
+            const detailsRow = document.getElementById(`details-${docId}`);
+            if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+                detailsRow.style.display = 'table-row';
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        }
+
+        function savePointsDistribution() {
+            const amendmentsPoints = document.getElementById('amendments-points').value;
+            const poisPoints = document.getElementById('pois-points').value;
+            const friendlyAmendmentsPoints = document.getElementById('friendly-amendments-points').value;
+            const speechesPoints = document.getElementById('speeches-points').value;
+
+            const pointsDistribution = {
+                amendments: amendmentsPoints,
+                pois: poisPoints,
+                friendlyAmendments: friendlyAmendmentsPoints,
+                speeches: speechesPoints
+            };
+
+            db.collection('settings').doc('pointsDistribution').set(pointsDistribution)
+                .then(() => {
+                    console.log('Points distribution saved');
+                    updateAllDelegatesPoints();
+                    displayPointsDistribution(); // Update displayed points distribution
+                })
+                .catch((error) => {
+                    console.error('Error saving points distribution: ', error);
+                });
+        }
+
+        function updateAllDelegatesPoints() {
+            db.collection('settings').doc('pointsDistribution').get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const pointsDistribution = doc.data();
+                        const committees = ["GA2", "GA3", "ICJ"];
+                        committees.forEach(committee => {
+                            db.collection(committee).get()
+                                .then((querySnapshot) => {
+                                    querySnapshot.forEach((doc) => {
+                                        const delegate = doc.data();
+                                        let totalPoints = (delegate.POI * pointsDistribution.pois) +
+                                            (delegate.speech * pointsDistribution.speeches);
+                                        if (delegate.amendments) {
+                                            totalPoints += delegate.amendments * pointsDistribution.amendments;
+                                        }
+                                        if (delegate.friendlyAmendments) {
+                                            totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+                                        }
+                                        db.collection(committee).doc(doc.id).update({
+                                            points: totalPoints
+                                        });
+                                    });
+                                });
+                        });
+                    } else {
+                        console.log('No points distribution found');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error updating total points: ', error);
+                });
+        }
+
+        function updateDelegatePoints(docId, committee) {
+            db.collection('settings').doc('pointsDistribution').get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const pointsDistribution = doc.data();
+                        db.collection(committee).doc(docId).get()
+                            .then((delegateDoc) => {
+                                if (delegateDoc.exists) {
+                                    const delegate = delegateDoc.data();
+                                    let totalPoints = (delegate.POI * pointsDistribution.pois) +
+                                        (delegate.speech * pointsDistribution.speeches);
+                                    if (delegate.amendments) {
+                                        totalPoints += delegate.amendments * pointsDistribution.amendments;
+                                    }
+                                    if (delegate.friendlyAmendments) {
+                                        totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+                                    }
+                                    db.collection(committee).doc(docId).update({
+                                        points: totalPoints
+                                    }).then(() => {
+                                        loadDelegates(committee);
+                                    });
+                                }
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error updating delegate points: ', error);
+                });
+        }
+
+        function displayPointsDistribution() {
+            db.collection('settings').doc('pointsDistribution').get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const pointsDistribution = doc.data();
+                        document.getElementById('amendments-points').value = pointsDistribution.amendments;
+                        document.getElementById('pois-points').value = pointsDistribution.pois;
+                        document.getElementById('friendly-amendments-points').value = pointsDistribution.friendlyAmendments;
+                        document.getElementById('speeches-points').value = pointsDistribution.speeches;
+                    } else {
+                        console.log('No points distribution found');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error retrieving points distribution: ', error);
+                });
+        }
+
+        // Amendments functions
+        function addAmendment() {
+            const amendmentText = document.getElementById('amendmentText').value;
+            const amendmentType = document.getElementById('amendmentType').value;
+            const amendmentCountry = document.getElementById('amendmentCountry').value;
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            const amendment = {
+                text: amendmentText,
+                type: amendmentType,
+                country: amendmentCountry,
+                passed: false,
+                committee: committee
+            };
+
+            const amendmentItem = document.createElement('li');
+            amendmentItem.innerHTML = `
+                ${amendment.text} (${amendment.type}) - ${amendment.country}
+                <button onclick="deleteAmendment(this)">x</button><br>
+                <label><input type="checkbox" onchange="markPassed(this, false)"> Passed</label>
+                <label><input type="checkbox" onchange="markPassed(this, true)"> Not Passed</label>
+            `;
+            document.getElementById('amendmentList').appendChild(amendmentItem);
+            saveAmendment(amendment);
+        }
+
+        function saveAmendment(amendment) {
+            db.collection('amendments').add(amendment)
+                .then((docRef) => {
+                    console.log("Amendment added with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding amendment: ", error);
+                });
+        }
+
+        function markPassed(checkbox, notPassed) {
+            const listItem = checkbox.closest('li');
+            const amendmentText = listItem.firstChild.textContent.trim();
+            const amendmentType = amendmentText.match(/\((.*?)\)/)[1];
+            const amendmentCountry = amendmentText.split('- ')[1];
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            // Uncheck the other checkbox
+            const checkboxes = listItem.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb) => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+
+            // Mark the amendment as passed or not passed
+            const amendment = {
+                text: amendmentText,
+                type: amendmentType,
+                country: amendmentCountry,
+                passed: !notPassed,
+                committee: committee
+            };
+
+            moveToPreviousAmendments(amendment);
+            listItem.remove(); // Remove the amendment from the current list
+
+            // Update the delegate's amendment count
+            db.collection(committee).where('country', '==', amendmentCountry).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userDoc = querySnapshot.docs[0];
+                        const user = userDoc.data();
+                        const updateData = {};
+
+                        if (amendmentType === 'Friendly') {
+                            updateData.friendlyAmendments = (user.friendlyAmendments || 0) + 1;
+                        } else {
+                            updateData.amendments = (user.amendments || 0) + 1;
+                        }
+
+                        db.collection(committee).doc(userDoc.id).update(updateData)
+                            .then(() => {
+                                console.log('Amendment count updated for', amendmentCountry);
+                                updateDelegatePoints(userDoc.id, committee);
+                            })
+                            .catch((error) => {
+                                console.error('Error updating amendment count:', error);
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error getting user:', error);
+                });
+        }
+
+        function moveToPreviousAmendments(amendment) {
+            const amendmentItem = document.createElement('li');
+            amendmentItem.innerHTML = `
+                ${amendment.text} (${amendment.type}) - ${amendment.country}<br>
+                <label>Passed: ${amendment.passed ? 'Yes' : 'No'}</label>
+            `;
+            document.getElementById('previousAmendmentList').appendChild(amendmentItem);
+            saveAmendment(amendment); // Save the updated amendment status
+        }
+
+        function deleteAmendment(button) {
+            const listItem = button.closest('li');
+            const amendmentText = listItem.firstChild.textContent.trim();
+            const amendmentType = amendmentText.match(/\((.*?)\)/)[1];
+            const amendmentCountry = amendmentText.split('- ')[1];
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            // Remove the amendment from Firestore
+            db.collection('amendments').where('text', '==', amendmentText).where('committee', '==', committee).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        db.collection('amendments').doc(doc.id).delete()
+                            .then(() => {
+                                console.log('Amendment successfully deleted!');
+                            })
+                            .catch((error) => {
+                                console.error('Error removing amendment: ', error);
+                            });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error getting amendments: ', error);
+                });
+
+            listItem.remove(); // Remove the amendment from the list
+        }
+
+        function loadAmendments() {
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+            db.collection('amendments').where('committee', '==', committee).get()
+                .then((querySnapshot) => {
+                    const amendmentList = document.getElementById('amendmentList');
+                    const previousAmendmentList = document.getElementById('previousAmendmentList');
+                    amendmentList.innerHTML = '';
+                    previousAmendmentList.innerHTML = '';
+                    querySnapshot.forEach((doc) => {
+                        const amendment = doc.data();
+                        const amendmentItem = document.createElement('li');
+                        if (amendment.passed === false) {
+                            amendmentItem.innerHTML = `
+                                ${amendment.text} (${amendment.type}) - ${amendment.country}
+                                <button onclick="deleteAmendment(this)">x</button><br>
+                                <label><input type="checkbox" onchange="markPassed(this, false)"> Passed</label>
+                                <label><input type="checkbox" onchange="markPassed(this, true)"> Not Passed</label>
+                            `;
+                            amendmentList.appendChild(amendmentItem);
+                        } else {
+                            amendmentItem.innerHTML = `
+                                ${amendment.text} (${amendment.type}) - ${amendment.country}<br>
+                                <label>Passed: ${amendment.passed ? 'Yes' : 'No'}</label>
+                            `;
+                            previousAmendmentList.appendChild(amendmentItem);
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading amendments: ", error);
+                });
+        }
+
+//         function loadAttendance() {
+//     const attendanceTableBody = document.getElementById('attendance-table-body');
+//     attendanceTableBody.innerHTML = ''; // Clear previous rows
+
+//     db.collection('settings').doc('conferenceTimeline').get().then(doc => {
+//         const numberOfDays = doc.exists ? doc.data().days : 3; // Default to 3 days if not set
+
+//         db.collection('committees').get().then(querySnapshot => {
+//             let headersRow = `<tr>
+//                 <th>First Name</th>
+//                 <th>Last Name</th>
+//                 <th>Country</th>`;
+            
+//             for (let i = 1; i <= numberOfDays; i++) {
+//                 headersRow += `<th>Day ${i}</th>`;
+//             }
+//             headersRow += `</tr>`;
+//             attendanceTableBody.innerHTML = headersRow;
+
+//             querySnapshot.forEach(committeeDoc => {
+//                 const committee = committeeDoc.data().name;
+
+//                 db.collection(committee).get().then(querySnapshot => {
+//                     querySnapshot.forEach((doc) => {
+//                         const delegate = doc.data();
+//                         let attendanceRow = `<tr>
+//                             <td>${delegate.firstName}</td>
+//                             <td>${delegate.lastName}</td>
+//                             <td>${delegate.country}</td>`;
+
+//                         for (let i = 1; i <= numberOfDays; i++) {
+//                             attendanceRow += `<td><input type="checkbox" data-committee="${committee}" data-docid="${doc.id}" data-day="day${i}" ${delegate.attendance && delegate.attendance[`day${i}`] ? 'checked' : ''}></td>`;
+//                         }
+
+//                         attendanceRow += '</tr>';
+//                         attendanceTableBody.innerHTML += attendanceRow;
+//                     });
+//                 }).then(() => {
+//                     loadAttendanceStatus(); // Load attendance status after adding rows
+//                 }).catch((error) => {
+//                     console.error('Error fetching delegates:', error);
+//                 });
+//             });
+//         }).catch(error => {
+//             console.error('Error loading committees:', error);
+//         });
+//     }).catch(error => {
+//         console.error('Error loading conference timeline:', error);
+//     });
+// }
+function loadAttendance() {
+    const attendanceTableBody = document.getElementById('attendance-table-body');
+    const attendanceTableHead = document.getElementById('attendance-table-head');
+    attendanceTableBody.innerHTML = ''; // Clear previous rows
+    attendanceTableHead.innerHTML = ''; // Clear previous headers
+
+    db.collection('settings').doc('conferenceTimeline').get().then(doc => {
+        const numberOfDays = doc.exists ? doc.data().days : 3; // Default to 3 days if not set
+
+        db.collection('committees').get().then(querySnapshot => {
+            let headersRow = `<tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Country</th>`;
+            
+            for (let i = 1; i <= numberOfDays; i++) {
+                headersRow += `<th>Day ${i}</th>`;
+            }
+            headersRow += `</tr>`;
+            attendanceTableHead.innerHTML = headersRow;
+
+            querySnapshot.forEach(committeeDoc => {
+                const committee = committeeDoc.data().name;
+
+                db.collection(committee).get().then(querySnapshot => {
+                    querySnapshot.forEach((doc) => {
+                        const delegate = doc.data();
+                        let attendanceRow = `<tr>
+                            <td>${delegate.firstName}</td>
+                            <td>${delegate.lastName}</td>
+                            <td>${delegate.country}</td>`;
+
+                        for (let i = 1; i <= numberOfDays; i++) {
+                            attendanceRow += `<td><input type="checkbox" data-committee="${committee}" data-docid="${doc.id}" data-day="day${i}" ${delegate.attendance && delegate.attendance[`day${i}`] ? 'checked' : ''}></td>`;
+                        }
+
+                        attendanceRow += '</tr>';
+                        attendanceTableBody.innerHTML += attendanceRow;
+                    });
+                }).then(() => {
+                    loadAttendanceStatus(); // Load attendance status after adding rows
+                }).catch((error) => {
+                    console.error('Error fetching delegates:', error);
+                });
+            });
+        }).catch(error => {
+            console.error('Error loading committees:', error);
+        });
+    }).catch(error => {
+        console.error('Error loading conference timeline:', error);
+    });
+}
+
+
+
+
+        function loadAttendanceStatus() {
+            const attendanceTableBody = document.getElementById('attendance-table-body');
+            const checkboxes = attendanceTableBody.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                const committee = checkbox.getAttribute('data-committee');
+                const docId = checkbox.getAttribute('data-docid');
+                const day = checkbox.getAttribute('data-day');
+
+                db.collection(committee).doc(docId).get().then((doc) => {
+                    if (doc.exists) {
+                        const delegate = doc.data();
+                        if (delegate.attendance && delegate.attendance[day]) {
+                            checkbox.checked = true;
+                        }
+                    }
+                }).catch((error) => {
+                    console.error('Error loading attendance status: ', error);
+                });
+
+                checkbox.addEventListener('change', function () {
+                    const isChecked = checkbox.checked;
+                    updateAttendance(committee, docId, day, isChecked);
+                });
+            });
+        }
+
+        function updateAttendance(committee, docId, day, isChecked) {
+            const delegateRef = db.collection(committee).doc(docId);
+
+            delegateRef.get().then((doc) => {
+                if (doc.exists) {
+                    const delegate = doc.data();
+                    const attendance = delegate.attendance || {};
+                    attendance[day] = isChecked;
+                    delegateRef.update({
+                        attendance: attendance
+                    }).then(() => {
+                        console.log('Attendance updated');
+                    }).catch((error) => {
+                        console.error('Error updating attendance: ', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error getting delegate: ', error);
+            });
+        }
+
+        // POI Functions
+        function addPOI() {
+            const poiCountry = document.getElementById('poiCountry').value;
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            db.collection(committee).where('country', '==', poiCountry).get().then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const doc = querySnapshot.docs[0];
+                    const currentPOICount = doc.data().POI || 0;
+
+                    db.collection(committee).doc(doc.id).update({
+                        POI: currentPOICount + 1
+                    }).then(() => {
+                        console.log('POI count incremented for', poiCountry);
+                        updateDelegatePoints(doc.id, committee);
+
+                        // Add POI to the list
+                        const poiList = document.getElementById('poiList');
+                        const poiItem = document.createElement('li');
+                        const currentTime = new Date().toLocaleString();
+                        poiItem.innerText = `${poiCountry} - ${currentTime}`;
+                        poiList.appendChild(poiItem);
+
+                        // Update total POIs
+                        const totalPOIsElement = document.getElementById('totalPOIs');
+                        totalPOIsElement.innerText = parseInt(totalPOIsElement.innerText) + 1;
+                    }).catch((error) => {
+                        console.error('Error incrementing POI count:', error);
+                    });
+                } else {
+                    alert('Invalid country. Please enter a valid country from the delegates list.');
+                }
+            });
+        }
+
+        function loadPOIs() {
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            db.collection(committee).get().then((querySnapshot) => {
+                const poiList = document.getElementById('poiList');
+                poiList.innerHTML = ''; // Clear previous list
+                let totalPOIs = 0;
+
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    const poiCount = delegate.POI || 0;
+                    totalPOIs += poiCount;
+
+                    for (let i = 0; i < poiCount; i++) {
+                        const poiItem = document.createElement('li');
+                        poiItem.innerText = `${delegate.country} - ${new Date().toLocaleString()}`;
+                        poiList.appendChild(poiItem);
+                    }
+                });
+
+                // Update total POIs
+                const totalPOIsElement = document.getElementById('totalPOIs');
+                totalPOIsElement.innerText = totalPOIs;
+            }).catch((error) => {
+                console.error('Error loading POIs:', error);
+            });
+        }
+
+        // Chat Functions
+        document.getElementById('showChat').addEventListener('click', function (event) {
+    event.preventDefault();
+    document.getElementById('contentDelegates').style.display = 'none';
+    document.getElementById('contentRuntime').style.display = 'none';
+    document.getElementById('contentAmendments').style.display = 'none';
+    document.getElementById('contentAttendance').style.display = 'none';
+    document.getElementById('contentPOIs').style.display = 'none';
+    document.getElementById('contentChat').style.display = 'block';
+    closeSidebar();
+    loadAllChatMessages();
+});
+
+// Firebase authentication state change listener
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        loadAllChatMessages(); // Load all chat messages if the user is authenticated
+    }
+});
+
+// Function to load all chat messages
+function loadAllChatMessages() {
+    const chatContainer = document.getElementById('chatContainer');
+    chatContainer.innerHTML = ''; // Clear previous messages
+
+    db.collection('chats')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot((querySnapshot) => {
+            chatContainer.innerHTML = ''; // Clear previous messages
+            querySnapshot.forEach((doc) => {
+                const message = doc.data();
+                const senderName = message.senderName || message.sender || 'Unknown Sender';
+                const text = message.text || message.message || 'No content';
+                const messageElement = document.createElement('div');
+                const senderElement = document.createElement('div');
+                senderElement.classList.add('chat-sender');
+                senderElement.innerText = senderName;
+                messageElement.classList.add('chat-message');
+                messageElement.innerText = text;
+                chatContainer.appendChild(senderElement);
+                chatContainer.appendChild(messageElement);
+            });
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
+        }, (error) => {
+            console.error('Error fetching messages:', error);
+        });
+}
+
+// Function to send a message to the Secretariat
+function sendMessageToSecretariat() {
+    const chatMessage = document.getElementById('chatMessage').value;
+    const user = firebase.auth().currentUser;
+
+    if (chatMessage && user) {
+        db.collection('users').doc(user.uid).get().then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const committee = userData.committee || 'Unknown Committee';
+
+                const message = {
+                    sender: user.email,
+                    senderName: user.displayName || user.email.split('@')[0], // Use display name or email prefix
+                    text: chatMessage,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    senderCommittee: committee,
+                    receiver: 'Secretariat'
+                };
+
+                db.collection('chats').add(message)
+                    .then(() => {
+                        document.getElementById('chatMessage').value = ''; // Clear input field
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
+            }
+        }).catch((error) => {
+            console.log('Error getting user document:', error);
+        });
+    } else {
+        console.error('Missing required fields:', {
+            chatMessage, user
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+        // Call displayPointsDistribution() to display points distribution on page load
+        displayPointsDistribution();
+        document.getElementById('searchBar').addEventListener('input', function () {
+            const searchQuery = this.value.toLowerCase();
+            filterDelegates(searchQuery);
+        });
+
+        function filterDelegates(searchQuery) {
+            const rows = document.querySelectorAll('#list-table-body tr:not(.hidden-info)');
+            rows.forEach(row => {
+                const firstName = row.cells[1].textContent.toLowerCase();
+                const lastName = row.cells[2].textContent.toLowerCase();
+                const country = row.cells[7].textContent.toLowerCase();
+                if (firstName.includes(searchQuery) || lastName.includes(searchQuery) || country.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function autocomplete(inp, arr) {
+            let currentFocus;
+            inp.addEventListener('input', function (e) {
+                let a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(a);
+                for (i = 0; i < arr.length; i++) {
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        b.addEventListener('click', function (e) {
+                            inp.value = this.getElementsByTagName('input')[0].value;
+                            filterDelegates(inp.value.toLowerCase());
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+
+            inp.addEventListener('keydown', function (e) {
+                let x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) {
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) currentFocus.click();
+                    }
+                }
+            });
+
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add('autocomplete-active');
+            }
+
+            function removeActive(x) {
+                for (let i = 0; i < x.length; i++) {
+                    x[i].classList.remove('autocomplete-active');
+                }
+            }
+
+            function closeAllLists(elmnt) {
+                const x = document.getElementsByClassName('autocomplete-items');
+                for (let i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+
+            document.addEventListener('click', function (e) {
+                closeAllLists(e.target);
+            });
+        }
+
+        function fetchAutocompleteData() {
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+            const delegatesRef = db.collection(committee);
+            const autocompleteData = [];
+            delegatesRef.get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    autocompleteData.push(delegate.firstName, delegate.lastName, delegate.country);
+                });
+                autocomplete(document.getElementById('searchBar'), autocompleteData);
+            });
+        }
+
+        // function sortTable(columnIndex) {
+        //     const table = document.querySelector('.table');
+        //     const tbody = table.querySelector('tbody');
+        //     const rows = Array.from(tbody.querySelectorAll('tr:not(.hidden-info)'));
+        //     const isAscending = table.dataset.sortOrder === 'asc';
+
+        //     rows.sort((rowA, rowB) => {
+        //         const cellA = rowA.cells[columnIndex].textContent.trim();
+        //         const cellB = rowB.cells[columnIndex].textContent.trim();
+        //         if (isAscending) {
+        //             return cellA > cellB ? 1 : -1;
+        //         } else {
+        //             return cellA < cellB ? 1 : -1;
+        //         }
+        //     });
+
+        //     table.dataset.sortOrder = isAscending ? 'desc' : 'asc';
+        //     rows.forEach(row => tbody.appendChild(row));
+        // }
+
+        // // Initialize sorting functionality
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     document.querySelectorAll('.table th button').forEach(button => {
+        //         button.addEventListener('click', () => {
+        //             const columnIndex = button.closest('th').cellIndex;
+        //             sortTable(columnIndex);
+        //         });
+        //     });
+        // });
+
+        let sortOrder = {};
+        function sortTable(columnIndex) {
+            const table = document.querySelector("#list-table-body");
+            const rows = Array.from(table.querySelectorAll("tr:not(.hidden-info)"));
+            const reverse = !sortOrder[columnIndex];
+            sortOrder[columnIndex] = reverse;
+
+            rows.sort((a, b) => {
+                const aText = a.children[columnIndex].textContent.trim();
+                const bText = b.children[columnIndex].textContent.trim();
+                if (aText < bText) {
+                    return reverse ? 1 : -1;
+                }
+                if (aText > bText) {
+                    return reverse ? -1 : 1;
+                }
+                return 0;
+            });
+
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        document.getElementById("searchBar").addEventListener("input", function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#list-table-body tr:not(.hidden-info)");
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                let match = false;
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                    }
+                });
+
+                if (match) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+

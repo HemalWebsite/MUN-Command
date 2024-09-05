@@ -1,0 +1,171 @@
+
+.highlight-cell{
+    display:flex;
+    margin-right:10px;
+    background-color:blue;
+}
+
+.results-div{
+    background-color: red;
+}
+.table{
+    background-color: orange;
+    display: flex;
+}
+tr{
+    background-color: purple;
+    display: flex;
+}
+
+.name,
+.school,
+.email,
+.grade,
+.committee,
+.points
+{
+    margin-right: 10px;
+}
+.name{
+    width: 450px;
+    margin-left: 29px;
+}
+
+.textfield{
+    display: inline-flex;
+    margin-right: 0px;
+}
+
+.school-textfield{
+    margin-right: 0px;
+}
+
+.HeadingName{
+    display: inline-block;
+    width: 448px;
+    background-color: green;
+    margin-right: 10px;
+    margin-left:29px;
+}
+.td{
+    display: block;
+    margin-right: 10px;
+}
+
+.name-container{
+    width: 450px;
+    margin-left: 20px;
+}
+
+.firstName-name-container,
+.middleName-name-container,
+.lastName-name-container
+{
+    display: inline-block;
+    width:150px;
+    text-align: center;
+    background-color: blanchedalmond;
+}
+.school-container{
+    margin-left: 10px;
+    background-color: beige;
+    width: 290px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.HeadingSchool{
+    width: 300px;
+    margin-right: 10px;
+    
+    text-align: center;
+}
+.HeadingEmail{
+    width: 300px;
+    margin-right: 10px;
+    background-color: burlywood;
+}
+.email-container{
+    width: 300px;
+    text-align: center;
+    margin-right: 10px;
+    background-color: burlywood;
+}
+
+.HeadingGrade{
+    width:50px;
+    margin-right: 10px;
+}
+.grade-container{
+    width:50px;
+    margin-right: 10px;
+    background-color: aquamarine;
+    text-align: center;
+}
+
+.committee-container{
+    width:150px;
+    margin-right: 10px;
+    background-color: mediumseagreen;
+    text-align: center;
+}
+.HeadingCommittee{
+    width:150px;
+    margin-right: 10px;
+    background-color: mediumseagreen;
+    text-align: center;
+}
+
+
+.Points{
+    width:50px;
+    margin-right: 10px;
+    background-color: navy;
+    text-align: center;
+}
+
+.addNewDelegate{
+    margin-left: 34px;
+    width: 1300px;
+}
+
+/* .country-textfield{
+    
+} */
+
+.country{
+    background-color: whitesmoke;
+    width: 100px;
+}
+.HeadingCountry{
+    width: 150px;
+}
+.country-container{
+    width:150px;
+    text-align: center
+}
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
