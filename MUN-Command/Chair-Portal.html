@@ -1,0 +1,2212 @@
+
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <!-- Bootstrap Css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Chairs Portal</title>
+    <link rel="stylesheet" href="css/chair.css">
+    <link rel="stylesheet" href="css/chairComputerStyling.css">
+    <!-- Refresh -->
+    <meta http-equiv="refresh" content="600">
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <!-- Firebase Initialization -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyBvFoce8hFYoxngW6g3RZSWkyQIMT7TD-Q",
+  authDomain: "cismun-5e942.firebaseapp.com",
+  projectId: "cismun-5e942",
+  storageBucket: "cismun-5e942.appspot.com",
+  messagingSenderId: "375760397313",
+  appId: "1:375760397313:web:2b18161af1c1b270bd4c00",
+  measurementId: "G-9JQ4ZBWVBM"
+};
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+    <!-- Styling -->
+    <style>
+        
+
+    </style>
+</head>
+
+<body style="background-color: #add8e6; background: linear-gradient(to right, #add8e6, #00aaff);">
+    
+<!-- Login
+    <div class="wrapper">
+        <div class="card" id="login-container">
+            <h5 class="card-header">Login</h5>
+            <div class="card-body">
+                <input type="email" class="LoginTextBoxes" id="email" placeholder="Email">
+                <input type="password" class="LoginTextBoxes" id="password" placeholder="Password">
+                <button onclick="login()" class="LoginButton">Login</button>
+                <p id="login-error" style="color: red;"></p>
+            </div>
+        </div>
+    </div> -->
+    
+    
+    
+<!-- Navbar -->
+    <nav class="navbar " id="sidebar">
+        <a class="navbar-brand" href="#">
+            <img src="download.png" alt="" style="width: 40px;" class="img-fluid" id="navbarImage" onclick="logoutUser()">
+        </a>
+        
+        
+        
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showDelegates">Delegates</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showRuntimeEnvironment">Speech</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showAmendments">Amendments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showAttendance">Attendance</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showPOIs">POIs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showChat">Chat</a>
+            </li>
+        </ul>
+        <button class="navbar-toggler" type="button" id="toggleButton" aria-expanded="false" aria-label="Toggle navigation"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container " id="mainContent">
+
+        <!-- <div class="container">
+                <div class="card" style="width: 100%;">
+                    <div class="card-text">
+                        <div id="contentDelegates" style="display: none;">
+                            <h1>Delegates</h1>
+                            <input type="text" id="searchBar" class="SearchDelegates" placeholder="Search delegates...">
+                            <table class="table table-striped table-hover my-4">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First <button onclick="sortTable(1)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button></th>
+                                        <th scope="col">Last <button onclick="sortTable(2)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button></th>
+                                        <th scope="col">School <button onclick="sortTable(3)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button> </th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Grade <button onclick="sortTable(5)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button></th>
+                                        <th scope="col">Committee</th>
+                                        <th scope="col">Country <button onclick="sortTable(7)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button></th>
+                                        <th scope="col">Total Points <button onclick="sortTable(8)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                          </svg></button></th>
+                                        <th scope="col">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-table-body">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+        </div> -->
+        <div id="contentDelegates" style="display: none;">
+            <div class="container">
+                <div class="card" style="width: 100%;">
+                    <h1>Delegates</h1>
+                        <input type="text" id="searchBar" class="SearchDelegates" placeholder="Search delegates...">
+                        <table class="table table-striped table-hover my-4">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First <button onclick="sortTable(1)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button></th>
+                                    <th scope="col">Last <button onclick="sortTable(2)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button></th>
+                                    <th scope="col">School <button onclick="sortTable(3)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button> </th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Grade <button onclick="sortTable(5)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button></th>
+                                    <th scope="col">Committee</th>
+                                    <th scope="col">Country <button onclick="sortTable(7)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button></th>
+                                    <th scope="col">Total Points <button onclick="sortTable(8)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                                    </svg></button></th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-table-body">
+                                <!-- Table rows will be added here -->
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            
+        </div>
+        
+       
+
+
+
+
+
+
+
+
+        <div id="contentRuntime">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="card text-bg-warning" style="width: 100%;">
+                        <div class="card-text">
+                            <div class="agenda">
+                                <input type="search" id="inputAgenda" placeholder="Agenda ....." class="agendabox">
+                                <!-- <button onclick="SetAgenda()">Set</button> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <p class="agendadisplay"></p> -->
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-text">
+                            <div class="time-input">
+                                <!-- <label for="inputTime">Enter time in seconds per speaker:</label> -->
+                                <input type="number" id="inputTime" class="TimePerSpeaker" placeholder="Enter time in seconds per speaker:" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <div class="row mb-2">
+                            <div class="card" style="width: 100%;">
+                                <div class="controls">
+                                    <button id="startButton" onclick="startSpeech()" class="StartButton btn btn-success">Start</button>
+                                    <button id="pauseButton" onclick="pauseSpeech()" class="PauseButton btn btn-primary">Pause</button>
+                                    <button id="nextButton" onclick="moveToNextSpeaker()" class="NextButton btn btn-warning">Next</button>
+                                    <button id="endButton" onclick="endSpeech()" class="EndButton btn btn-danger">End</button>
+                                </div>
+                    
+                                <div class="timer">
+                                    <span id="countdown">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row mb-2">
+                            <div class="card text-bg-success" style="width: 100%;">
+                                <div class="card-text">
+                                    <div class="speaker-info">
+                                        <p>Current Speaker:</p>
+                                        <div class="currentSpeaker"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row mb-2">
+                            <div class="card" style="width: 100%;">
+                                <div class="card-text">
+                                    <div class="speaker-info">
+                                        <p>Upcoming Speakers:</p>
+                                        <ul id="countryList"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="col-8">
+                        <div class="card ms-2" style="width: 100%; height: 100%;">
+                            <div class="card-text">
+                                <div class="speakers-list">
+                                    <input type="search" id="countryAdd" placeholder="Enter Speakers List" class="countryAdd" onfocus="showAllCountries()" />
+                                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            
+                
+
+                
+            </div>
+            
+            
+ 
+        </div>
+
+
+
+
+
+
+
+        <div id="contentAmendments" style="display: none;">
+            <div class="card text-bg-warning mb-2" style="width: 100%;">
+                <div class="card-header">
+                    <h3>
+                        New Amendments
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <textarea id="amendmentText" placeholder="Amendment..."></textarea>
+                        
+                        <select id="amendmentType">
+                            <option value="Friendly">Friendly</option>
+                            <option value="Unfriendly">Unfriendly</option>
+                        </select>
+                    <input type="text" id="amendmentCountry" placeholder="Country">
+                    <button onclick="addAmendment()" class="btn btn-primary">Add Amendment</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-5" style="width:100%;">
+                <div class="card-text">
+                    <ul id="amendmentList"></ul>
+                </div>
+            </div>
+        
+            <div class="card text-bg-secondary" style="width:100%">
+                <div class="card-header">
+                    <h3>
+                        Previous Amendments
+                    </h3>
+                </div>
+                <div class="card-text">
+                    <ul id="previousAmendmentList"></ul>
+                </div>
+            </div>
+            <div>
+        
+                
+            </div>
+        </div>
+
+
+        <div id="contentPOIs" style="display: none;">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-header">
+                            <h1>Points of Information (POIs)</h1>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row mt-2 mb-2">
+                    <div class="col-8 mb-2" style="padding:0; padding-right: 10px;">
+                        <div class="card text-bg-warning" style="width: 100%; height: 100%;">
+                            <div class="card-text">
+                                <input type="text" id="poiCountry" placeholder="Country" class="CountryAdd" onfocus="showAllPOICountries()" >
+                                <div id="poi-autocomplete-list" class="autocomplete-items"></div>
+                                <button onclick="addPOI()" class="ADDPOIBTN btn btn-primary">Add POI</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4" style="padding:0;">
+                        <div class="card text-bg-info" style="width: 100%; height: 100%;">
+                            <div class="card-header">
+                                <h3>Total POIs</h3>
+                            </div>
+                            <div class="card-text">
+                                <h3 id="totalPOIs">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+        
+                <div class="row">
+                    <div class="card text-bg-secondary" style="width: 100%;">
+                        <div class="card-header">
+                            <h3>POI List</h3>
+                        </div>
+                        <div class="card-text">
+                            <ul id="poiList" style="max-height: 300px; overflow-y: auto;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+
+        <div id="contentAttendance" style="display: none;">
+            <div class="container">
+                <div class="card" style="width: 100%;">
+                    <h1>Attendance</h1>
+                    <table class="table table-striped table-hover my-4">
+                        <thead id="attendance-table-head">
+                            
+                        </thead>
+                        <tbody id="attendance-table-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+           
+        </div>
+
+        
+
+        
+
+
+
+
+
+
+        <div id="contentChat">
+            <div class="container">
+                <div class="card chatbox" style="width: 100%;">
+                    <div class="card-header">
+                        <h2>Chat</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="chat-container" id="chatContainer"></div>
+                            <textarea id="chatMessage" class="form-control" placeholder="Type your message here..." ></textarea>
+                            <button class="btn btn-primary" onclick="sendMessageToGroupChat()" style="width: 100%; height: 50px;">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="recordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="recordModalLabel">Record Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p id="modal-body-content">Loading...</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="timer.js" defer></script>
+    <script src="speakersList.js"></script>
+    <script>
+        document.getElementById('toggleButton').addEventListener('click', function () {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'flex';
+            } else {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var sidebar = document.getElementById('sidebar');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            if (!sidebar.classList.contains('expanded')) {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        function closeSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('expanded');
+            var navLinks = sidebar.querySelector('.navbar-nav');
+            navLinks.style.display = 'none';
+        }
+
+        document.getElementById('showDelegates').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'block';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadDelegates();
+        });
+
+        document.getElementById('showRuntimeEnvironment').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'block';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+        });
+
+        document.getElementById('showAmendments').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'block';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadAmendments();
+        });
+
+        document.getElementById('showAttendance').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'block';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadAttendance();
+        });
+
+        document.getElementById('showPOIs').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'block';
+            document.getElementById('contentChat').style.display = 'none';
+            closeSidebar();
+            loadPOIs();
+        });
+
+        document.getElementById('showChat').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'block';
+            closeSidebar();
+        });
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+let spokenDelegates = [];
+let validCountries = [];
+let currentSpeaker = null;
+let interval;
+let countdown;
+let originalTime;
+
+document.addEventListener('DOMContentLoaded', function () {
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    currentCommittee = userData.committee; // Get the current committee from user data
+                    loadValidCountries(currentCommittee); // Load valid countries for the committee
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+    });
+
+    document.getElementById('countryAdd').addEventListener('input', function () {
+        filterCountries(this.value);
+    });
+
+    document.getElementById('countryAdd').addEventListener('focus', function () {
+        showAllCountries();
+    });
+
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', function () {
+        togglePausePlay();
+    });
+
+    document.getElementById('nextButton').addEventListener('click', function () {
+        moveToNextSpeaker();
+    });
+
+    document.getElementById('endButton').addEventListener('click', function () {
+        endSpeech();
+    });
+});
+
+function loadValidCountries(committee) {
+    db.collection(committee).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const delegate = doc.data();
+            validCountries.push(delegate.country);
+        });
+        validCountries.sort(); // Sort countries alphabetically
+        console.log('Valid countries loaded:', validCountries); // Debugging
+    }).catch((error) => {
+        console.error('Error loading valid countries:', error);
+    });
+}
+
+function SetAgenda() {
+    var agenda = document.getElementById('inputAgenda').value;
+    document.querySelector('.agendadisplay').innerText = agenda;
+}
+
+function startSpeech(resume = false) {
+    if (!currentSpeaker) {
+        alert('No current speaker');
+        return;
+    }
+    if (resume && localStorage.getItem('pausedTime')) {
+        countdown = parseInt(localStorage.getItem('pausedTime'));
+    } else {
+        originalTime = parseInt(document.getElementById('inputTime').value); // Ensure we get the original time
+        if (!originalTime || isNaN(originalTime)) {
+            alert('Please enter a valid time');
+            return;
+        }
+        countdown = originalTime;
+    }
+    document.getElementById('countdown').innerText = formatTime(countdown);
+    interval = setInterval(function () {
+        countdown--;
+        document.getElementById('countdown').innerText = formatTime(countdown);
+        if (countdown <= 0) {
+            clearInterval(interval);
+            alert('Time is up');
+            moveToNextSpeaker();
+        }
+    }, 1000);
+
+    if (!spokenDelegates.includes(currentSpeaker)) {
+        spokenDelegates.push(currentSpeaker);
+    }
+}
+function resetSpeech() {
+    clearInterval(interval);
+    countdown = originalTime;
+    document.getElementById('countdown').innerText = formatTime(originalTime);
+    document.getElementById('pauseButton').innerText = 'Pause'; // Reset button text to 'Pause'
+    localStorage.removeItem('pausedTime');
+}
+
+function pauseSpeech() {
+    clearInterval(interval);
+    pausedTime = countdown;
+    localStorage.setItem('pausedTime', pausedTime);
+}
+
+function endSpeech() {
+    clearInterval(interval);
+    document.getElementById('inputAgenda').value = ''; // Reset agenda
+    document.getElementById('inputTime').value = ''; // Reset time
+    document.querySelector('.currentSpeaker').innerHTML = ''; // Clear current speaker
+    document.querySelector('#countryList').innerHTML = ''; // Clear upcoming speakers
+    document.querySelector('.agendadisplay').innerText = ''; // Clear displayed agenda
+    currentSpeaker = null;
+    document.getElementById('countdown').innerText = '00:00';
+    updateAllSpokenDelegatesPoints();
+    spokenDelegates = []; // Reset the list of spoken delegates
+}
+
+function addNewCountry() {
+    const countryInput = document.getElementById('countryAdd').value;
+    if (validCountries.includes(countryInput)) {
+        if (!currentSpeaker) {
+            currentSpeaker = countryInput;
+            document.querySelector('.currentSpeaker').innerHTML = currentSpeaker + ' <button class="removeBTN" onclick="removeCurrentSpeaker()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>';
+        } else {
+            const li = document.createElement('li');
+            li.innerHTML = countryInput + ' <button class="removeBTN"  onclick="removeUpcomingSpeaker(this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>';
+            document.querySelector('#countryList').appendChild(li);
+        }
+        document.getElementById('countryAdd').value = ''; // Clear input
+        closeAllLists();
+    } else {
+        alert('Invalid country. Please enter a valid country from the delegates list.');
+    }
+}
+
+function removeCurrentSpeaker() {
+    const currentSpeakerElement = document.querySelector('.currentSpeaker');
+    const upcomingSpeakersList = document.querySelector('#countryList');
+    if (currentSpeakerElement.firstChild) {
+        const removedSpeaker = currentSpeakerElement.firstChild.textContent.trim();
+        currentSpeakerElement.innerHTML = '';
+        currentSpeaker = null;
+        // Remove from upcoming speakers list if exists
+        Array.from(upcomingSpeakersList.children).forEach((item) => {
+            if (item.textContent.trim().includes(removedSpeaker)) {
+                upcomingSpeakersList.removeChild(item);
+            }
+        });
+        if (upcomingSpeakersList.firstChild) {
+            const nextSpeakerElement = upcomingSpeakersList.firstChild;
+            currentSpeaker = nextSpeakerElement.textContent.trim();
+            currentSpeakerElement.innerHTML = currentSpeaker + ' <button class="removeBTN" onclick="removeCurrentSpeaker()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>';
+            upcomingSpeakersList.removeChild(nextSpeakerElement);
+            resetSpeech();
+        }
+    }
+}
+
+function removeUpcomingSpeaker(button) {
+    const li = button.parentElement;
+    document.querySelector('#countryList').removeChild(li);
+}
+
+function incrementSpeechCountAndMoveToNextSpeaker() {
+    const committee = currentCommittee;
+    const currentSpeakerElement = document.querySelector('.currentSpeaker');
+    const upcomingSpeakersList = document.querySelector('#countryList');
+    const nextSpeakerElement = upcomingSpeakersList.firstChild;
+
+    if (currentSpeaker) {
+        db.collection(committee).where('country', '==', currentSpeaker).get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const currentSpeechCount = doc.data().speech || 0;
+                db.collection(committee).doc(doc.id).update({
+                    speech: currentSpeechCount + 1
+                }).then(() => {
+                    console.log('Speech count incremented for', currentSpeaker);
+                    if (nextSpeakerElement) {
+                        currentSpeaker = nextSpeakerElement.textContent.trim();
+                        currentSpeakerElement.innerHTML = currentSpeaker + ' <button onclick="removeCurrentSpeaker()">X</button>';
+                        upcomingSpeakersList.removeChild(nextSpeakerElement);
+                    } else {
+                        currentSpeaker = null;
+                        currentSpeakerElement.innerHTML = '';
+                    }
+                    resetSpeech();
+                }).catch((error) => {
+                    console.error('Error incrementing speech count:', error);
+                });
+            }
+        });
+    }
+}
+
+function updateAllSpokenDelegatesPoints() {
+    const committee = currentCommittee;
+    spokenDelegates.forEach(delegateCountry => {
+        db.collection(committee).where('country', '==', delegateCountry).get().then(querySnapshot => {
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                const currentSpeechCount = doc.data().speech || 0;
+                db.collection(committee).doc(doc.id).update({
+                    speech: currentSpeechCount + 1
+                }).then(() => {
+                    console.log('Speech count incremented for', delegateCountry);
+                    updateDelegatePoints(doc.id, committee);
+                }).catch((error) => {
+                    console.error('Error incrementing speech count:', error);
+                });
+            }
+        });
+    });
+}
+
+function showAllCountries() {
+    const input = document.getElementById('countryAdd');
+    closeAllLists();
+    const listDiv = document.createElement("div");
+    listDiv.setAttribute("id", input.id + "autocomplete-list");
+    listDiv.setAttribute("class", "autocomplete-items");
+    listDiv.style.top = input.offsetTop + input.offsetHeight + "px";
+    listDiv.style.left = input.offsetLeft + "px";
+    listDiv.style.width = input.offsetWidth + "px";
+    input.parentNode.appendChild(listDiv);
+
+    const filteredCountries = getFilteredCountries();
+
+    filteredCountries.forEach(country => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = country;
+        itemDiv.innerHTML += "<input type='hidden' value='" + country + "'>";
+        itemDiv.addEventListener("click", function(e) {
+            input.value = this.getElementsByTagName("input")[0].value;
+            addNewCountry();
+            closeAllLists();
+        });
+        listDiv.appendChild(itemDiv);
+    });
+}
+
+function filterCountries(value) {
+    closeAllLists();
+    if (!value) return;
+    const input = document.getElementById('countryAdd');
+    const listDiv = document.createElement("div");
+    listDiv.setAttribute("id", input.id + "autocomplete-list");
+    listDiv.setAttribute("class", "autocomplete-items");
+    listDiv.style.top = input.offsetTop + input.offsetHeight + "px";
+    listDiv.style.left = input.offsetLeft + "px";
+    listDiv.style.width = input.offsetWidth + "px";
+    input.parentNode.appendChild(listDiv);
+
+    const filteredCountries = getFilteredCountries().filter(country => country.toLowerCase().includes(value.toLowerCase()));
+
+    filteredCountries.forEach(country => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = country;
+        itemDiv.innerHTML += "<input type='hidden' value='" + country + "'>";
+        itemDiv.addEventListener("click", function(e) {
+            document.getElementById('countryAdd').value = this.getElementsByTagName("input")[0].value;
+            addNewCountry();
+            closeAllLists();
+        });
+        listDiv.appendChild(itemDiv);
+    });
+}
+
+function getFilteredCountries() {
+    const currentCountries = [currentSpeaker, ...Array.from(document.querySelectorAll('#countryList li')).map(li => li.firstChild.textContent.trim())];
+    console.log('Current countries:', currentCountries); // Debugging
+    return validCountries.filter(country => !currentCountries.includes(country));
+}
+
+function closeAllLists(elmnt) {
+    const items = document.getElementsByClassName("autocomplete-items");
+    for (let i = 0; i < items.length; i++) {
+        if (elmnt != items[i] && elmnt != document.getElementById('countryAdd')) {
+            items[i].parentNode.removeChild(items[i]);
+        }
+    }
+}
+
+let pausedTime = null;
+
+function togglePausePlay() {
+    const pauseButton = document.getElementById('pauseButton');
+    if (pauseButton.innerText === 'Pause') {
+        pauseSpeech();
+        pauseButton.innerText = 'Play';
+    } else {
+        if (countdown > 0) {
+            startSpeech(true);
+            pauseButton.innerText = 'Pause';
+        } else {
+            alert('Please set the time before starting the speech.');
+        }
+    }
+}
+
+function moveToNextSpeaker() {
+    const currentSpeakerElement = document.querySelector('.currentSpeaker');
+    const upcomingSpeakersList = document.querySelector('#countryList');
+
+    if (upcomingSpeakersList.firstElementChild) {
+        const nextSpeakerElement = upcomingSpeakersList.firstElementChild;
+        currentSpeaker = nextSpeakerElement.textContent.trim();
+        currentSpeakerElement.innerHTML = currentSpeaker + ' <button onclick="removeCurrentSpeaker()">X</button>';
+        upcomingSpeakersList.removeChild(nextSpeakerElement);
+        resetSpeech();
+    } else {
+        currentSpeakerElement.innerHTML = '';
+        currentSpeaker = null;
+        updateAllSpokenDelegatesPoints();
+        spokenDelegates = [];
+    }
+}
+
+
+
+
+
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
+function updateDelegatePoints(docId, committee) {
+    db.collection('settings').doc('pointsDistribution').get()
+        .then((doc) => {
+            if (doc.exists) {
+                const pointsDistribution = doc.data();
+                db.collection(committee).doc(docId).get()
+                    .then((delegateDoc) => {
+                        if (delegateDoc.exists) {
+                            const delegate = delegateDoc.data();
+                            let totalPoints = (delegate.POI * pointsDistribution.pois) +
+                                (delegate.speech * pointsDistribution.speeches);
+                            if (delegate.amendments) {
+                                totalPoints += delegate.amendments * pointsDistribution.amendments;
+                            }
+                            if (delegate.friendlyAmendments) {
+                                totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+                            }
+                            db.collection(committee).doc(docId).update({
+                                points: totalPoints
+                            });
+                        }
+                    });
+            }
+        })
+        .catch((error) => {
+            console.error('Error updating delegate points: ', error);
+        });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            // Get user data from Firestore
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const committee = userData.committee;
+                    // Show the sidebar and main content
+                    document.getElementById('login-container').style.display = 'none';
+                    document.getElementById('sidebar').classList.remove('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                    // Set committee for runtime environment
+                    document.getElementById('showRuntimeEnvironment').setAttribute('data-committee', committee);
+                    // Load delegates for the user's committee
+                    loadDelegates(committee);
+                } else {
+                    console.log('No such document!');
+                }
+            }).catch((error) => {
+                console.error('Error getting document:', error);
+            });
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            let errorMessage = '';
+
+            switch (errorCode) {
+                case 'auth/wrong-password':
+                    errorMessage = 'Invalid password. Please try again.';
+                    document.getElementById('password').value = ''; // Clear password input
+                    alert(errorMessage);
+                    break;
+                case 'auth/user-not-found':
+                    errorMessage = 'User not found. Please check your email.';
+                    document.getElementById('email').value = ''; // Clear email input
+                    alert(errorMessage);
+                    break;
+                default:
+                    errorMessage = 'Login failed. Please try again later.';
+                    alert(errorMessage);
+                    break;
+            }
+
+            document.getElementById('login-error').innerText = errorMessage;
+        });
+}
+
+
+
+
+
+function loadDelegates(committee) {
+    document.getElementById('contentDelegates').style.display = 'block';
+    document.getElementById('contentRuntime').style.display = 'none';
+    document.getElementById('contentAmendments').style.display = 'none';
+    document.getElementById('contentAttendance').style.display = 'none';
+    document.getElementById('contentPOIs').style.display = 'none';
+    document.getElementById('contentChat').style.display = 'none';
+
+    const delegatesRef = firebase.firestore().collection(committee);
+    delegatesRef.get().then((querySnapshot) => {
+        const tableBody = document.getElementById('list-table-body');
+        tableBody.innerHTML = ''; // Clear previous rows
+        validCountries = []; // Clear previous countries
+        let rowIndex = 1; // Initialize row index for sequential numbering
+        let maxPoints = 0;
+        querySnapshot.forEach((doc) => {
+            const delegate = doc.data();
+            maxPoints = Math.max(maxPoints, delegate.points);
+        });
+
+        querySnapshot.forEach((doc) => {
+            const delegate = doc.data();
+            const totalSpeeches = delegate.POI + delegate.speech + delegate.amendments;
+            const pickingOrder = totalSpeeches ? delegate.points / totalSpeeches : 0;
+            const blueIntensity = pickingOrder ? Math.floor((pickingOrder / 10) * 255) : 255;
+            const blueColor = `rgb(${255 - blueIntensity}, ${255 - blueIntensity}, 255)`;
+
+            const delegateRow = document.createElement('tr');
+            delegateRow.style.backgroundColor = blueColor;
+            delegateRow.setAttribute('data-delegate-id', doc.id);
+            delegateRow.innerHTML = `
+                <td>${rowIndex++}</td>
+                <td>${delegate.firstName}</td>
+                <td>${delegate.lastName}</td>
+                <td>${delegate.school}</td>
+                <td>${delegate.email}</td>
+                <td>${delegate.grade}</td>
+                <td>${delegate.committee}</td>
+                <td>${delegate.country}</td>
+                <td id="points-${doc.id}">${delegate.points}</td>
+                <td><button onclick="toggleDetails('${doc.id}', '${committee}')" class="btn btn-warning">Details</button></td>
+            `;
+            tableBody.appendChild(delegateRow);
+
+            const detailsRow = document.createElement('tr');
+            detailsRow.className = 'hidden-info';
+            detailsRow.id = `details-${doc.id}`;
+            detailsRow.style.display = 'none';
+            detailsRow.setAttribute('data-details-for', doc.id);
+            detailsRow.innerHTML = `
+                <td colspan="10">
+                    <div class="details-container">
+                        <strong>No. Total times spoken:</strong> <span id="total-${doc.id}">${totalSpeeches}</span><br>
+                        <strong>POI's:</strong> <span id="POI-${doc.id}">${delegate.POI}</span>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('POI', '${doc.id}', 1, '${committee}')">+</button>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('POI', '${doc.id}', -1, '${committee}')">-</button><br>
+                        <strong>Speeches:</strong> <span id="speech-${doc.id}">${delegate.speech}</span>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('speech', '${doc.id}', 1, '${committee}')">+</button>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('speech', '${doc.id}', -1, '${committee}')">-</button><br>
+                        <strong>Amendments:</strong> <span id="amendments-${doc.id}">${delegate.amendments || 0}</span>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('amendments', '${doc.id}', 1, '${committee}')">+</button>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('amendments', '${doc.id}', -1, '${committee}')">-</button><br>
+                        <strong>Friendly Amendments:</strong> <span id="friendlyAmendments-${doc.id}">${delegate.friendlyAmendments || 0}</span>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('friendlyAmendments', '${doc.id}', 1, '${committee}')">+</button>
+                        <button class="btn btn-info btn-sm" onclick="confirmChange('friendlyAmendments', '${doc.id}', -1, '${committee}')">-</button><br>
+                        <strong>Comments:</strong> <input type="text" value="${delegate.comments || ''}" onchange="saveComments('${doc.id}', this.value, '${committee}')"><br>
+                        <strong>Report:</strong> <input type="text" value="${delegate.report || ''}" onchange="saveReport('${doc.id}', this.value, '${committee}')">
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(detailsRow);
+
+            validCountries.push(delegate.country); // Add country to valid countries list
+        });
+    }).then(() => {
+        closeSidebar();
+    });
+}
+
+function toggleDetails(docId, committee) {
+    const detailsRow = document.getElementById(`details-${docId}`);
+    if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+        detailsRow.style.display = 'table-row';
+    } else {
+        detailsRow.style.display = 'none';
+    }
+}
+
+
+
+
+
+
+
+
+
+function confirmChange(type, id, delta, committee) {
+    const span = document.getElementById(`${type}-${id}`);
+    let currentCount = parseInt(span.innerText);
+    if (delta < 0 && currentCount <= 0) {
+        alert(`Cannot decrement ${type} as it is already at 0.`);
+        return;
+    }
+    
+    const confirmation = confirm(`Are you sure you want to ${delta > 0 ? 'increment' : 'decrement'} the number of ${type} by this delegate?`);
+    if (confirmation) {
+        changeCount(type, id, delta, committee);
+    }
+}
+
+function changeCount(type, id, delta, committee) {
+    const span = document.getElementById(`${type}-${id}`);
+    let currentCount = parseInt(span.innerText);
+    currentCount = isNaN(currentCount) ? 0 : currentCount + delta;
+    if (currentCount < 0) currentCount = 0;
+    span.innerText = currentCount;
+
+    const delegateRef = firebase.firestore().collection(committee).doc(id);
+    delegateRef.get().then((delegateDoc) => {
+        if (delegateDoc.exists) {
+            const delegate = delegateDoc.data();
+
+            firebase.firestore().collection('settings').doc('pointsDistribution').get().then((doc) => {
+                if (doc.exists) {
+                    const pointsDistribution = doc.data();
+
+                    const totalSpeechesSpan = document.getElementById(`total-${id}`);
+                    let totalSpeeches = parseInt(totalSpeechesSpan.innerText);
+                    totalSpeeches = isNaN(totalSpeeches) ? 0 : totalSpeeches;
+                    if (type === 'POI' || type === 'speech' || type === 'amendments') {
+                        totalSpeeches += delta;
+                    }
+                    if (totalSpeeches < 0) totalSpeeches = 0;
+                    totalSpeechesSpan.innerText = totalSpeeches;
+
+                    // Calculate points based on type
+                    const pointsDelta = calculatePointsDelta(type, delta, pointsDistribution);
+
+                    // Update total points
+                    const pointsSpan = document.getElementById(`points-${id}`);
+                    let currentPoints = parseInt(pointsSpan.innerText);
+                    currentPoints = isNaN(currentPoints) ? 0 : currentPoints + pointsDelta;
+                    if (currentPoints < 0) currentPoints = 0;
+                    pointsSpan.innerText = currentPoints;
+
+                    delegateRef.update({
+                        [type]: currentCount,
+                        points: currentPoints
+                    });
+                }
+            });
+        }
+    });
+}
+
+function calculatePointsDelta(type, delta, pointsDistribution) {
+    let pointsPerAction;
+    switch(type) {
+        case 'POI':
+            pointsPerAction = pointsDistribution.pois || 1;
+            break;
+        case 'speech':
+            pointsPerAction = pointsDistribution.speeches || 2;
+            break;
+        case 'amendments':
+            pointsPerAction = pointsDistribution.amendments || 3;
+            break;
+        case 'friendlyAmendments':
+            pointsPerAction = pointsDistribution.friendlyAmendments || 1;
+            break;
+        default:
+            pointsPerAction = 0;
+    }
+    return pointsPerAction * delta;
+}
+
+
+
+
+
+
+
+
+
+
+
+        function saveComments(docId, comments, committee) {
+            db.collection(committee).doc(docId).update({
+                comments: comments
+            }).then(() => {
+                console.log('Comments saved');
+            }).catch((error) => {
+                console.error('Error saving comments: ', error);
+            });
+        }
+
+        function saveReport(docId, report, committee) {
+            db.collection(committee).doc(docId).update({
+                report: report
+            }).then(() => {
+                console.log('Report saved');
+            }).catch((error) => {
+                console.error('Error saving report: ', error);
+            });
+        }
+
+   
+        function toggleDetails(docId, committee) {
+    const detailsRow = document.getElementById(`details-${docId}`);
+    
+    // Check if the details row already exists
+    if (detailsRow) {
+        // Toggle its display
+        detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
+        return;
+    }
+
+    // If the details row does not exist, create it
+    const delegateRef = db.collection(committee).doc(docId);
+    delegateRef.get().then(doc => {
+        if (doc.exists) {
+            const delegate = doc.data();
+            const row = document.createElement('tr');
+            row.id = `details-${docId}`;
+            row.className = 'hidden-info';
+            row.style.display = 'table-row'; // Ensure the row is visible initially
+            row.innerHTML = `
+                <td colspan="12">
+                    <div>
+                        <strong>POI's:</strong> ${delegate.POI || 0}<br>
+                        <strong>Speeches:</strong> ${delegate.speech || 0}<br>
+                        <strong>Amendments:</strong> ${delegate.amendments || 0}<br>
+                        <strong>Friendly Amendments:</strong> ${delegate.friendlyAmendments || 0}<br>
+                        <strong>Comments:</strong> ${delegate.comments || ''}<br>
+                        <strong>Report:</strong> ${delegate.report || ''}
+                    </div>
+                </td>
+            `;
+            const delegateRow = document.getElementById(`delegate-${docId}`);
+            delegateRow.after(row);  // Insert after the delegate row
+        } else {
+            console.log('No such document!');
+        }
+    }).catch(error => {
+        console.error('Error getting document:', error);
+    });
+}
+
+        function savePointsDistribution() {
+            const amendmentsPoints = document.getElementById('amendments-points').value;
+            const poisPoints = document.getElementById('pois-points').value;
+            const friendlyAmendmentsPoints = document.getElementById('friendly-amendments-points').value;
+            const speechesPoints = document.getElementById('speeches-points').value;
+
+            const pointsDistribution = {
+                amendments: amendmentsPoints,
+                pois: poisPoints,
+                friendlyAmendments: friendlyAmendmentsPoints,
+                speeches: speechesPoints
+            };
+
+            db.collection('settings').doc('pointsDistribution').set(pointsDistribution)
+                .then(() => {
+                    console.log('Points distribution saved');
+                    updateAllDelegatesPoints();
+                    displayPointsDistribution(); // Update displayed points distribution
+                })
+                .catch((error) => {
+                    console.error('Error saving points distribution: ', error);
+                });
+        }
+
+
+function updateDelegatePoints(docId, committee) {
+    db.collection('settings').doc('pointsDistribution').get()
+        .then((doc) => {
+            if (doc.exists) {
+                const pointsDistribution = doc.data();
+                db.collection(committee).doc(docId).get()
+                    .then((delegateDoc) => {
+                        if (delegateDoc.exists) {
+                            const delegate = delegateDoc.data();
+                            let totalPoints = (delegate.POI * pointsDistribution.pois) +
+                                (delegate.speech * pointsDistribution.speeches);
+                            if (delegate.amendments) {
+                                totalPoints += delegate.amendments * pointsDistribution.amendments;
+                            }
+                            if (delegate.friendlyAmendments) {
+                                totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+                            }
+                            db.collection(committee).doc(docId).update({
+                                points: totalPoints
+                            }).then(() => {
+                                loadDelegates(committee); // Reload delegates after points update
+                            });
+                        }
+                    });
+            }
+        })
+        .catch((error) => {
+            console.error('Error updating delegate points: ', error);
+        });
+}
+
+
+
+        function displayPointsDistribution() {
+            db.collection('settings').doc('pointsDistribution').get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const pointsDistribution = doc.data();
+                        document.getElementById('amendments-points').value = pointsDistribution.amendments;
+                        document.getElementById('pois-points').value = pointsDistribution.pois;
+                        document.getElementById('friendly-amendments-points').value = pointsDistribution.friendlyAmendments;
+                        document.getElementById('speeches-points').value = pointsDistribution.speeches;
+                    } else {
+                        console.log('No points distribution found');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error retrieving points distribution: ', error);
+                });
+        }
+
+
+
+
+
+
+
+        // Amendments functions
+        function addAmendment() {
+            const amendmentText = document.getElementById('amendmentText').value;
+            const amendmentType = document.getElementById('amendmentType').value;
+            const amendmentCountry = document.getElementById('amendmentCountry').value;
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            const amendment = {
+                text: amendmentText,
+                type: amendmentType,
+                country: amendmentCountry,
+                passed: false,
+                committee: committee
+            };
+
+            const amendmentItem = document.createElement('li');
+            amendmentItem.innerHTML = `
+                ${amendment.text} (${amendment.type}) - ${amendment.country}
+                <button onclick="deleteAmendment(this)">x</button><br>
+                <label><input type="checkbox" onchange="markPassed(this, false)"> Passed</label>
+                <label><input type="checkbox" onchange="markPassed(this, true)"> Not Passed</label>
+            `;
+            document.getElementById('amendmentList').appendChild(amendmentItem);
+            saveAmendment(amendment);
+        }
+
+        function saveAmendment(amendment) {
+            db.collection('amendments').add(amendment)
+                .then((docRef) => {
+                    console.log("Amendment added with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding amendment: ", error);
+                });
+        }
+
+        function markPassed(checkbox, notPassed) {
+            const listItem = checkbox.closest('li');
+            const amendmentText = listItem.firstChild.textContent.trim();
+            const amendmentType = amendmentText.match(/\((.*?)\)/)[1];
+            const amendmentCountry = amendmentText.split('- ')[1];
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            // Uncheck the other checkbox
+            const checkboxes = listItem.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb) => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+
+            // Mark the amendment as passed or not passed
+            const amendment = {
+                text: amendmentText,
+                type: amendmentType,
+                country: amendmentCountry,
+                passed: !notPassed,
+                committee: committee
+            };
+
+            moveToPreviousAmendments(amendment);
+            listItem.remove(); // Remove the amendment from the current list
+
+            // Update the delegate's amendment count
+            db.collection(committee).where('country', '==', amendmentCountry).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userDoc = querySnapshot.docs[0];
+                        const user = userDoc.data();
+                        const updateData = {};
+
+                        if (amendmentType === 'Friendly') {
+                            updateData.friendlyAmendments = (user.friendlyAmendments || 0) + 1;
+                        } else {
+                            updateData.amendments = (user.amendments || 0) + 1;
+                        }
+
+                        db.collection(committee).doc(userDoc.id).update(updateData)
+                            .then(() => {
+                                console.log('Amendment count updated for', amendmentCountry);
+                                updateDelegatePoints(userDoc.id, committee);
+                            })
+                            .catch((error) => {
+                                console.error('Error updating amendment count:', error);
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error getting user:', error);
+                });
+        }
+
+        function moveToPreviousAmendments(amendment) {
+            const amendmentItem = document.createElement('li');
+            amendmentItem.innerHTML = `
+                ${amendment.text} (${amendment.type}) - ${amendment.country}<br>
+                <label>Passed: ${amendment.passed ? 'Yes' : 'No'}</label>
+            `;
+            document.getElementById('previousAmendmentList').appendChild(amendmentItem);
+            saveAmendment(amendment); // Save the updated amendment status
+        }
+
+        function deleteAmendment(button) {
+            const listItem = button.closest('li');
+            const amendmentText = listItem.firstChild.textContent.trim();
+            const amendmentType = amendmentText.match(/\((.*?)\)/)[1];
+            const amendmentCountry = amendmentText.split('- ')[1];
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+            // Remove the amendment from Firestore
+            db.collection('amendments').where('text', '==', amendmentText).where('committee', '==', committee).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        db.collection('amendments').doc(doc.id).delete()
+                            .then(() => {
+                                console.log('Amendment successfully deleted!');
+                            })
+                            .catch((error) => {
+                                console.error('Error removing amendment: ', error);
+                            });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error getting amendments: ', error);
+                });
+
+            listItem.remove(); // Remove the amendment from the list
+        }
+
+        function loadAmendments() {
+    const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+    db.collection('amendments').where('committee', '==', committee).get()
+        .then((querySnapshot) => {
+            const amendmentList = document.getElementById('amendmentList');
+            const previousAmendmentList = document.getElementById('previousAmendmentList');
+            amendmentList.innerHTML = '';
+            previousAmendmentList.innerHTML = '';
+
+            const tableHeader = `
+                <tr>
+                    <th>Amendment Description</th>
+                    <th>Type of Amendment</th>
+                    <th>Country</th>
+                    <th>Passed</th>
+                    <th>Actions</th>
+                </tr>
+            `;
+
+            const amendmentTable = document.createElement('table');
+            amendmentTable.classList.add('amendment-table');
+            amendmentTable.innerHTML = tableHeader;
+            const previousAmendmentTable = document.createElement('table');
+            previousAmendmentTable.classList.add('amendment-table');
+            previousAmendmentTable.innerHTML = tableHeader;
+
+            querySnapshot.forEach((doc) => {
+                const amendment = doc.data();
+                const amendmentRow = document.createElement('tr');
+
+                if (amendment.passed === false) {
+                    amendmentRow.innerHTML = `
+                        <td class="description">${amendment.text}</td>
+                        <td>${amendment.type}</td>
+                        <td>${amendment.country}</td>
+                        <td>
+                            <label><input type="checkbox" onchange="markPassed(this, false)"> Passed</label>
+                            <label><input type="checkbox" onchange="markPassed(this, true)"> Not Passed</label>
+                        </td>
+                        <td><button class="ammendmentDeleteButton btn btn-hazard" onclick="deleteAmendment('${doc.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+</svg>
+                            </button></td>
+                    `;
+                    amendmentTable.appendChild(amendmentRow);
+                } else {
+                    amendmentRow.innerHTML = `
+                        <td class="description">${amendment.text}</td>
+                        <td>${amendment.type}</td>
+                        <td>${amendment.country}</td>
+                        <td>${amendment.passed ? 'Yes' : 'No'}</td>
+                        <td></td>
+                    `;
+                    previousAmendmentTable.appendChild(amendmentRow);
+                }
+            });
+
+            amendmentList.appendChild(amendmentTable);
+            previousAmendmentList.appendChild(previousAmendmentTable);
+        })
+        .catch((error) => {
+            console.error("Error loading amendments: ", error);
+        });
+}
+
+
+
+
+
+
+
+function loadAttendance() {
+    const attendanceTableBody = document.getElementById('attendance-table-body');
+    const attendanceTableHead = document.getElementById('attendance-table-head');
+    attendanceTableBody.innerHTML = ''; // Clear previous rows
+    attendanceTableHead.innerHTML = ''; // Clear previous headers
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
+                    
+                    // Load number of days from settings
+                    db.collection('settings').doc('conferenceTimeline').get().then(doc => {
+                        const numberOfDays = doc.exists ? doc.data().days : 3; // Default to 3 days if not set
+
+                        let headersRow = `<tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Country</th>`;
+                        
+                        for (let i = 1; i <= numberOfDays; i++) {
+                            headersRow += `<th>Day ${i}</th>`;
+                        }
+                        headersRow += `</tr>`;
+                        attendanceTableHead.innerHTML = headersRow;
+
+                        db.collection(committee).get().then(querySnapshot => {
+                            querySnapshot.forEach((doc) => {
+                                const delegate = doc.data();
+                                let attendanceRow = `<tr>
+                                    <td>${delegate.firstName}</td>
+                                    <td>${delegate.lastName}</td>
+                                    <td>${delegate.country}</td>`;
+
+                                for (let i = 1; i <= numberOfDays; i++) {
+                                    attendanceRow += `<td><input type="checkbox" data-committee="${committee}" data-docid="${doc.id}" data-day="day${i}" ${delegate.attendance && delegate.attendance[`day${i}`] ? 'checked' : ''}></td>`;
+                                }
+
+                                attendanceRow += '</tr>';
+                                attendanceTableBody.innerHTML += attendanceRow;
+                            });
+                        }).then(() => {
+                            loadAttendanceStatus(); // Load attendance status after adding rows
+                        }).catch((error) => {
+                            console.error('Error fetching delegates:', error);
+                        });
+                    }).catch(error => {
+                        console.error('Error loading conference timeline:', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+    });
+}
+
+// Call the function to load attendance
+loadAttendance();
+
+
+
+
+
+        function loadAttendanceStatus() {
+            const attendanceTableBody = document.getElementById('attendance-table-body');
+            const checkboxes = attendanceTableBody.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                const committee = checkbox.getAttribute('data-committee');
+                const docId = checkbox.getAttribute('data-docid');
+                const day = checkbox.getAttribute('data-day');
+
+                db.collection(committee).doc(docId).get().then((doc) => {
+                    if (doc.exists) {
+                        const delegate = doc.data();
+                        if (delegate.attendance && delegate.attendance[day]) {
+                            checkbox.checked = true;
+                        }
+                    }
+                }).catch((error) => {
+                    console.error('Error loading attendance status: ', error);
+                });
+
+                checkbox.addEventListener('change', function () {
+                    const isChecked = checkbox.checked;
+                    updateAttendance(committee, docId, day, isChecked);
+                });
+            });
+        }
+
+        function updateAttendance(committee, docId, day, isChecked) {
+            const delegateRef = db.collection(committee).doc(docId);
+
+            delegateRef.get().then((doc) => {
+                if (doc.exists) {
+                    const delegate = doc.data();
+                    const attendance = delegate.attendance || {};
+                    attendance[day] = isChecked;
+                    delegateRef.update({
+                        attendance: attendance
+                    }).then(() => {
+                        console.log('Attendance updated');
+                    }).catch((error) => {
+                        console.error('Error updating attendance: ', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error getting delegate: ', error);
+            });
+        }
+
+
+
+
+
+
+        // POI Functions
+        function loadDelegatesAndPOIs() {
+    // Load delegates and update POIs here
+    loadPOIs(); // Assuming this function also loads delegate-related content
+}
+
+// Interval timer for auto-refresh (every 1 minute in this example)
+setInterval(() => {
+    loadDelegatesAndPOIs();
+}, 6000); // Refresh every 1 minute (60000 milliseconds)
+
+// POI Functions (unchanged except for adding loadDelegatesAndPOIs() call)
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('poiCountry').addEventListener('input', function () {
+        filterPOICountries(this.value);
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.matches('#poiCountry') && !e.target.matches('#poi-autocomplete-list *')) {
+            closeAllPOILists(e.target);
+        }
+    });
+});
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('poiCountry').addEventListener('input', function () {
+                filterPOICountries(this.value);
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!e.target.matches('#poiCountry') && !e.target.matches('#poi-autocomplete-list *')) {
+                    closeAllPOILists(e.target);
+                }
+            });
+        });
+
+        function showAllPOICountries() {
+            const input = document.getElementById('poiCountry');
+            closeAllPOILists();
+            const listDiv = document.createElement("div");
+            listDiv.setAttribute("id", input.id + "autocomplete-list");
+            listDiv.setAttribute("class", "autocomplete-items");
+            listDiv.style.top = input.offsetTop + input.offsetHeight + "px";
+            listDiv.style.left = input.offsetLeft + "px";
+            listDiv.style.width = input.offsetWidth + "px";
+            input.parentNode.appendChild(listDiv);
+
+            validCountries.forEach(country => {
+                const itemDiv = document.createElement("div");
+                itemDiv.innerHTML = country;
+                itemDiv.innerHTML += "<input type='hidden' value='" + country + "'>";
+                itemDiv.addEventListener("click", function(e) {
+                    input.value = this.getElementsByTagName("input")[0].value;
+                    closeAllPOILists();
+                });
+                listDiv.appendChild(itemDiv);
+            });
+        }
+
+        function filterPOICountries(value) {
+            closeAllPOILists();
+            if (!value) return;
+            const input = document.getElementById('poiCountry');
+            const listDiv = document.createElement("div");
+            listDiv.setAttribute("id", input.id + "autocomplete-list");
+            listDiv.setAttribute("class", "autocomplete-items");
+            listDiv.style.top = input.offsetTop + input.offsetHeight + "px";
+            listDiv.style.left = input.offsetLeft + "px";
+            listDiv.style.width = input.offsetWidth + "px";
+            input.parentNode.appendChild(listDiv);
+
+            validCountries.filter(country => country.toLowerCase().includes(value.toLowerCase())).forEach(country => {
+                const itemDiv = document.createElement("div");
+                itemDiv.innerHTML = country;
+                itemDiv.innerHTML += "<input type='hidden' value='" + country + "'>";
+                itemDiv.addEventListener("click", function(e) {
+                    input.value = this.getElementsByTagName("input")[0].value;
+                    closeAllPOILists();
+                });
+                listDiv.appendChild(itemDiv);
+            });
+        }
+
+        function closeAllPOILists(elmnt) {
+            const items = document.getElementsByClassName("autocomplete-items");
+            for (let i = 0; i < items.length; i++) {
+                if (elmnt != items[i] && elmnt != document.getElementById('poiCountry')) {
+                    items[i].parentNode.removeChild(items[i]);
+                }
+            }
+        }
+
+
+
+
+
+
+
+function addPOI() {
+    const poiCountry = document.getElementById('poiCountry').value;
+    const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+    const currentTime = firebase.firestore.Timestamp.now(); // Use Firestore timestamp for consistency
+
+    db.collection(committee).where('country', '==', poiCountry).get().then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            const delegateData = doc.data();
+            const currentPOIs = delegateData.POIs || []; // Array to hold POIs
+
+            currentPOIs.push({
+                timestamp: currentTime
+            });
+
+            db.collection(committee).doc(doc.id).update({
+                POIs: currentPOIs
+            }).then(() => {
+                console.log('POI added for', poiCountry);
+
+                // Update delegate points and refresh POI list
+                updateDelegatePoints(doc.id, committee);
+                loadPOIs(); // Refresh the POI list after adding a new POI
+                console.log("Points Updated");
+                // Clear the input field
+                document.getElementById('poiCountry').value = '';
+            }).catch((error) => {
+                console.error('Error adding POI:', error);
+            });
+        } else {
+            alert('Invalid country. Please enter a valid country from the delegates list.');
+        }
+    }).catch((error) => {
+        console.error('Error fetching country:', error);
+    });
+}
+
+
+// Function to load POIs
+function loadPOIs() {
+    const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+
+    db.collection(committee).get().then((querySnapshot) => {
+        const poiList = document.getElementById('poiList');
+        poiList.innerHTML = ''; // Clear previous list
+        let totalPOIs = 0;
+
+        querySnapshot.forEach((doc) => {
+            const delegate = doc.data();
+            const poiArray = delegate.POIs || [];
+
+            totalPOIs += poiArray.length;
+
+            poiArray.forEach(poi => {
+                const poiItem = document.createElement('li');
+                const timestamp = poi.timestamp ? poi.timestamp.toDate().toLocaleString() : 'Unknown time';
+                poiItem.innerHTML = `${delegate.country} - ${timestamp} <button class='removePOIBTN' style="background-color:none" onclick="deletePOI('${doc.id}', '${committee}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+</svg>
+                    </button>`;
+
+                poiList.appendChild(poiItem);
+            });
+        });
+
+        // Update total POIs
+        const totalPOIsElement = document.getElementById('totalPOIs');
+        totalPOIsElement.innerText = totalPOIs;
+    }).catch((error) => {
+        console.error('Error loading POIs:', error);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+// Function to delete a POI
+function deletePOI(docId, committee) {
+    if (confirm("Are you sure you want to delete this POI?")) {
+        db.collection(committee).doc(docId).get().then((doc) => {
+            if (doc.exists) {
+                const poiData = doc.data();
+                const currentPOICount = poiData.POI || 0;
+
+                // Ensure POI count doesn't go negative
+                if (currentPOICount > 0) {
+                    db.collection(committee).doc(docId).update({
+                        POI: currentPOICount - 1
+                    }).then(() => {
+                        console.log('POI count decremented for', poiData.country);
+                        updateDelegatePoints(docId, committee); // Update delegate points after POI deletion
+
+                        // Reload POIs list after deletion
+                        loadPOIs();
+                    }).catch((error) => {
+                        console.error('Error decrementing POI count:', error);
+                    });
+                }
+            }
+        }).catch((error) => {
+            console.error('Error deleting POI:', error);
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('showChat').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('contentDelegates').style.display = 'none';
+            document.getElementById('contentRuntime').style.display = 'none';
+            document.getElementById('contentAmendments').style.display = 'none';
+            document.getElementById('contentAttendance').style.display = 'none';
+            document.getElementById('contentPOIs').style.display = 'none';
+            document.getElementById('contentChat').style.display = 'block';
+            closeSidebar();
+            loadAllChatMessages();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+// Function to load all chat messages
+let currentCommittee = '';
+
+// Function to load all chat messages
+function loadAllChatMessages() {
+    const chatContainer = document.getElementById('chatContainer');
+    chatContainer.innerHTML = ''; // Clear previous messages
+
+    db.collection('chats')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot((querySnapshot) => {
+            chatContainer.innerHTML = ''; // Clear previous messages
+            const user = firebase.auth().currentUser;
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const userCommittee = userData.committee;
+
+                    querySnapshot.forEach((doc) => {
+                        const message = doc.data();
+                        const senderName = `${message.senderName}`;
+                        const text = message.text || message.message || 'No content';
+                        const timestamp = new Date(message.timestamp.toDate()).toLocaleString();
+
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message');
+                        messageElement.classList.add(message.senderCommittee === userCommittee ? 'sent' : 'received');
+
+                        const senderElement = document.createElement('div');
+                        senderElement.classList.add('chat-sender');
+                        senderElement.innerText = senderName;
+
+                        const textElement = document.createElement('div');
+                        textElement.innerText = text;
+
+                        const timestampElement = document.createElement('div');
+                        timestampElement.classList.add('chat-timestamp');
+                        timestampElement.innerText = timestamp;
+
+                        messageElement.appendChild(senderElement);
+                        messageElement.appendChild(textElement);
+                        messageElement.appendChild(timestampElement);
+
+                        chatContainer.appendChild(messageElement);
+                    });
+                    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }, (error) => {
+            console.error('Error fetching messages:', error);
+        });
+}
+
+function sendMessageToGroupChat() {
+    const chatMessage = document.getElementById('chatMessage').value;
+    const user = firebase.auth().currentUser;
+
+    if (chatMessage && user) {
+        db.collection('users').doc(user.uid).get().then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const senderName = `${userData.firstName} - ${userData.committee}`;
+                console.log(`Sending message from: ${senderName} (Committee: ${currentCommittee})`);
+
+                const message = {
+                    sender: user.email,
+                    senderName: senderName,
+                    text: chatMessage,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    senderCommittee: currentCommittee, // Use the current committee context
+                    receiver: 'GroupChat' // Use 'GroupChat' to indicate it's a group message
+                };
+
+                db.collection('chats').add(message)
+                    .then(() => {
+                        document.getElementById('chatMessage').value = ''; // Clear input field
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
+            }
+        }).catch((error) => {
+            console.log('Error getting user document:', error);
+        });
+    } else {
+        console.error('Missing required fields:', {
+            chatMessage, user
+        });
+    }
+}
+
+// Event listeners to load chat messages and send messages
+document.getElementById('showChat').addEventListener('click', function (event) {
+    event.preventDefault();
+    document.getElementById('contentDelegates').style.display = 'none';
+    document.getElementById('contentRuntime').style.display = 'none';
+    document.getElementById('contentAmendments').style.display = 'none';
+    document.getElementById('contentAttendance').style.display = 'none';
+    document.getElementById('contentPOIs').style.display = 'none';
+    document.getElementById('contentChat').style.display = 'block';
+    closeSidebar();
+    loadAllChatMessages(); // Load all chat messages
+});
+
+
+
+
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        db.collection('users').doc(user.uid).get().then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const currentCommittee = userData.committee; // Update the current committee context
+                console.log(`Authenticated user: ${user.email}, Committee: ${currentCommittee}`);
+         // Load attendance for the user's committee
+                loadAllChatMessages(); // Load all chat messages if the user is authenticated
+            }
+        }).catch((error) => {
+            console.error('Error fetching user data:', error);
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Call displayPointsDistribution() to display points distribution on page load
+        displayPointsDistribution();
+        document.getElementById('searchBar').addEventListener('input', function () {
+            const searchQuery = this.value.toLowerCase();
+            filterDelegates(searchQuery);
+        });
+
+        function filterDelegates(searchQuery) {
+            const rows = document.querySelectorAll('#list-table-body tr:not(.hidden-info)');
+            rows.forEach(row => {
+                const firstName = row.cells[1].textContent.toLowerCase();
+                const lastName = row.cells[2].textContent.toLowerCase();
+                const country = row.cells[7].textContent.toLowerCase();
+                if (firstName.includes(searchQuery) || lastName.includes(searchQuery) || country.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function autocomplete(inp, arr) {
+            let currentFocus;
+            inp.addEventListener('input', function (e) {
+                let a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(a);
+                for (i = 0; i < arr.length; i++) {
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        b.addEventListener('click', function (e) {
+                            inp.value = this.getElementsByTagName('input')[0].value;
+                            filterDelegates(inp.value.toLowerCase());
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+
+            inp.addEventListener('keydown', function (e) {
+                let x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) {
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) currentFocus.click();
+                    }
+                }
+            });
+
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add('autocomplete-active');
+            }
+
+            function removeActive(x) {
+                for (let i = 0; i < x.length; i++) {
+                    x[i].classList.remove('autocomplete-active');
+                }
+            }
+
+            function closeAllLists(elmnt) {
+                const x = document.getElementsByClassName('autocomplete-items');
+                for (let i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+
+            document.addEventListener('click', function (e) {
+                closeAllLists(e.target);
+            });
+        }
+
+        function fetchAutocompleteData() {
+            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+            const delegatesRef = db.collection(committee);
+            const autocompleteData = [];
+            delegatesRef.get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const delegate = doc.data();
+                    autocompleteData.push(delegate.firstName, delegate.lastName, delegate.country);
+                });
+                autocomplete(document.getElementById('searchBar'), autocompleteData);
+            });
+        }
+
+       
+
+        let sortOrder = {};
+        function sortTable(columnIndex) {
+            const table = document.querySelector("#list-table-body");
+            const rows = Array.from(table.querySelectorAll("tr:not(.hidden-info)"));
+            const reverse = !sortOrder[columnIndex];
+            sortOrder[columnIndex] = reverse;
+
+            rows.sort((a, b) => {
+                const aText = a.children[columnIndex].textContent.trim();
+                const bText = b.children[columnIndex].textContent.trim();
+                if (aText < bText) {
+                    return reverse ? 1 : -1;
+                }
+                if (aText > bText) {
+                    return reverse ? -1 : 1;
+                }
+                return 0;
+            });
+
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        document.getElementById("searchBar").addEventListener("input", function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#list-table-body tr:not(.hidden-info)");
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                let match = false;
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                    }
+                });
+
+                if (match) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+
+        const auth = firebase.auth();
+
+        // Log out function
+        function logoutUser() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                auth.signOut().then(() => {
+                    // Clear the session or local storage, if applicable
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    // Disable the back button by clearing the history state
+                    window.location.href = 'login.html';  // Redirect to login page after successful logout
+                }).catch((error) => {
+                    console.error("Error logging out:", error);
+                });
+            }
+        }
+
+        // Prevent back navigation after logout by clearing the history state
+        window.onpopstate = function (event) {
+            // After logging out, disable the back button
+            history.pushState(null, "", window.location.href);
+        };
+
+        // Ensure that if the user presses the back button, they remain on the login page
+        window.addEventListener('load', function () {
+            history.pushState(null, "", window.location.href);
+            window.onpopstate = function () {
+                history.pushState(null, "", window.location.href);
+            };
+        });
+        
+         
+    </script>
+   
+    
+</body>
+
+</html>
+

@@ -1,0 +1,136 @@
+.dropdown-item {
+    padding-left: 0px;
+    background-color: white;
+    font-size: 15px;
+    color: lightslategrey;
+}
+
+.dropdown-menu {
+    background-color: white;
+    margin-left: 20px;
+    border: none;
+}
+
+body {
+    background-color: whitesmoke;
+    display: flex;
+}
+
+.navbar {
+    height: 100vh;
+    width: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: white;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    transition: width 0.3s;
+    z-index: 1040;
+    overflow-x: hidden;
+}
+
+.navbar.expanded {
+    width: 250px;
+}
+
+.navbar-brand {
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar-nav {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.navbar.expanded .navbar-nav {
+    opacity: 1;
+}
+
+.nav-link {
+    text-align: left;
+    width: 100%;
+    padding-left: 20px;
+}
+
+.container {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.navbar-toggler {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.details-container {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.details-container strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.details-container input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* General styling for the chat container */
+.chat-container {
+display: flex;
+flex-direction: column;
+max-height: 500px;
+overflow-y: auto;
+margin: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+padding: 10px;
+}
+.message {
+max-width: 45%;
+margin: 5px 0;
+padding: 10px;
+border-radius: 10px;
+}
+.sent {
+background-color: #d4edda;
+align-self: flex-end;
+text-align: right;
+}
+.received {
+background-color: #cce5ff;
+align-self: flex-start;
+text-align: left;
+}
+.chat-sender {
+font-weight: bold;
+margin-bottom: 5px;
+}
+.chat-timestamp {
+font-size: small;
+color: #777;
+margin-top: 5px;
+}
