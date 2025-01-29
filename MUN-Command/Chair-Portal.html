@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html> 
 
@@ -19,14 +18,15 @@
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
-  apiKey: "AIzaSyBvFoce8hFYoxngW6g3RZSWkyQIMT7TD-Q",
-  authDomain: "cismun-5e942.firebaseapp.com",
-  projectId: "cismun-5e942",
-  storageBucket: "cismun-5e942.appspot.com",
-  messagingSenderId: "375760397313",
-  appId: "1:375760397313:web:2b18161af1c1b270bd4c00",
-  measurementId: "G-9JQ4ZBWVBM"
+  apiKey: "AIzaSyBDEEvYOZYPHes3iPEzgw69bWifvmyTEv8",
+  authDomain: "cismun2-aa47b.firebaseapp.com",
+  projectId: "cismun2-aa47b",
+  storageBucket: "cismun2-aa47b.firebasestorage.app",
+  messagingSenderId: "892674914371",
+  appId: "1:892674914371:web:c0a8c6e66ef6cf1c56fcf6"
 };
+
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -40,29 +40,27 @@
 
 <body style="background-color: #add8e6; background: linear-gradient(to right, #add8e6, #00aaff);">
     
-<!-- Login
+<!-- Login -->
     <div class="wrapper">
         <div class="card" id="login-container">
-            <h5 class="card-header">Login</h5>
+            <h2 class="text-center mb-4">Login</h2>
             <div class="card-body">
                 <input type="email" class="LoginTextBoxes" id="email" placeholder="Email">
                 <input type="password" class="LoginTextBoxes" id="password" placeholder="Password">
-                <button onclick="login()" class="LoginButton">Login</button>
+                <button onclick="login()" class="LoginButton btn btn-primary w-100">Login</button>
+
                 <p id="login-error" style="color: red;"></p>
             </div>
         </div>
-    </div> -->
+    </div>
     
     
     
 <!-- Navbar -->
-    <nav class="navbar " id="sidebar">
+    <nav class="navbar hidden" id="sidebar">
         <a class="navbar-brand" href="#">
-            <img src="download.png" alt="" style="width: 40px;" class="img-fluid" id="navbarImage" onclick="logoutUser()">
+            <img src="download.png" alt="" style="width: 40px;" class="img-fluid" id="navbarImage">
         </a>
-        
-        
-        
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="#" id="showDelegates">Delegates</a>
@@ -89,51 +87,9 @@
         </button>
     </nav>
 
-    <div class="container " id="mainContent">
+    <div class="container hidden" id="mainContent">
 
-        <!-- <div class="container">
-                <div class="card" style="width: 100%;">
-                    <div class="card-text">
-                        <div id="contentDelegates" style="display: none;">
-                            <h1>Delegates</h1>
-                            <input type="text" id="searchBar" class="SearchDelegates" placeholder="Search delegates...">
-                            <table class="table table-striped table-hover my-4">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First <button onclick="sortTable(1)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button></th>
-                                        <th scope="col">Last <button onclick="sortTable(2)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button></th>
-                                        <th scope="col">School <button onclick="sortTable(3)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button> </th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Grade <button onclick="sortTable(5)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button></th>
-                                        <th scope="col">Committee</th>
-                                        <th scope="col">Country <button onclick="sortTable(7)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button></th>
-                                        <th scope="col">Total Points <button onclick="sortTable(8)" class="sortButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
-                                          </svg></button></th>
-                                        <th scope="col">Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="list-table-body">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-        </div> -->
+  
         <div id="contentDelegates" style="display: none;">
             <div class="container">
                 <div class="card" style="width: 100%;">
@@ -166,7 +122,7 @@
                                     <th scope="col">Details</th>
                                 </tr>
                             </thead>
-                            <tbody id="list-table-body">
+                            <tbody id="list-table-body" class="delegateContainer">
                                 <!-- Table rows will be added here -->
                             </tbody>
                         </table>
@@ -217,7 +173,7 @@
                                     <button id="startButton" onclick="startSpeech()" class="StartButton btn btn-success">Start</button>
                                     <button id="pauseButton" onclick="pauseSpeech()" class="PauseButton btn btn-primary">Pause</button>
                                     <button id="nextButton" onclick="moveToNextSpeaker()" class="NextButton btn btn-warning">Next</button>
-                                    <button id="endButton" onclick="endSpeech()" class="EndButton btn btn-danger">End</button>
+                                    <button id="endButton" onclick="endSpeech()" class="EndButton btn btn-danger">Reset</button>
                                 </div>
                     
                                 <div class="timer">
@@ -277,7 +233,7 @@
 
 
         <div id="contentAmendments" style="display: none;">
-            <div class="card text-bg-warning mb-2" style="width: 100%;">
+            <div class="card text-bg-warning mt-3 mb-3" style="width: 100%;">
                 <div class="card-header">
                     <h3>
                         New Amendments
@@ -306,7 +262,7 @@
             <div class="card text-bg-secondary" style="width:100%">
                 <div class="card-header">
                     <h3>
-                        Previous Amendments
+                        Passed Amendments
                     </h3>
                 </div>
                 <div class="card-text">
@@ -359,7 +315,7 @@
                         <div class="card-header">
                             <h3>POI List</h3>
                         </div>
-                        <div class="card-text">
+                        <div class="card-text" id="poiListContainer">
                             <ul id="poiList" style="max-height: 300px; overflow-y: auto;"></ul>
                         </div>
                     </div>
@@ -397,7 +353,7 @@
 
 
 
-
+ 
         <div id="contentChat">
             <div class="container">
                 <div class="card chatbox" style="width: 100%;">
@@ -533,18 +489,7 @@
             closeSidebar();
         });
 
-
-
-
-
-
-
-
-
-        
-
-
-
+     
 
 let spokenDelegates = [];
 let validCountries = [];
@@ -656,16 +601,24 @@ function pauseSpeech() {
 }
 
 function endSpeech() {
+    console.log(1)
     clearInterval(interval);
-    document.getElementById('inputAgenda').value = ''; // Reset agenda
+    if (document.getElementById('inputAgenda').value !== '') {
+        document.getElementById('inputAgenda').value = ''; // Reset agenda
+    }
+    console.log(2)
     document.getElementById('inputTime').value = ''; // Reset time
+    console.log(3)
     document.querySelector('.currentSpeaker').innerHTML = ''; // Clear current speaker
+    console.log(4)
     document.querySelector('#countryList').innerHTML = ''; // Clear upcoming speakers
-    document.querySelector('.agendadisplay').innerText = ''; // Clear displayed agenda
+    console.log(5)
     currentSpeaker = null;
+    console.log(6)
     document.getElementById('countdown').innerText = '00:00';
     updateAllSpokenDelegatesPoints();
     spokenDelegates = []; // Reset the list of spoken delegates
+    console.log(7)
 }
 
 function addNewCountry() {
@@ -880,6 +833,7 @@ function formatTime(seconds) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
+
 function updateDelegatePoints(docId, committee) {
     db.collection('settings').doc('pointsDistribution').get()
         .then((doc) => {
@@ -908,8 +862,6 @@ function updateDelegatePoints(docId, committee) {
             console.error('Error updating delegate points: ', error);
         });
 }
-
-
 
 
 
@@ -974,10 +926,8 @@ function updateDelegatePoints(docId, committee) {
 }
 
 
-
-
-
 function loadDelegates(committee) {
+    // Hide other content sections
     document.getElementById('contentDelegates').style.display = 'block';
     document.getElementById('contentRuntime').style.display = 'none';
     document.getElementById('contentAmendments').style.display = 'none';
@@ -985,6 +935,7 @@ function loadDelegates(committee) {
     document.getElementById('contentPOIs').style.display = 'none';
     document.getElementById('contentChat').style.display = 'none';
 
+    // Access the Firestore collection for delegates
     const delegatesRef = firebase.firestore().collection(committee);
     delegatesRef.get().then((querySnapshot) => {
         const tableBody = document.getElementById('list-table-body');
@@ -1056,6 +1007,10 @@ function loadDelegates(committee) {
     });
 }
 
+
+
+
+
 function toggleDetails(docId, committee) {
     const detailsRow = document.getElementById(`details-${docId}`);
     if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
@@ -1064,12 +1019,6 @@ function toggleDetails(docId, committee) {
         detailsRow.style.display = 'none';
     }
 }
-
-
-
-
-
-
 
 
 
@@ -1161,8 +1110,6 @@ function calculatePointsDelta(type, delta, pointsDistribution) {
 
 
 
-
-
         function saveComments(docId, comments, committee) {
             db.collection(committee).doc(docId).update({
                 comments: comments
@@ -1183,7 +1130,6 @@ function calculatePointsDelta(type, delta, pointsDistribution) {
             });
         }
 
-   
         function toggleDetails(docId, committee) {
     const detailsRow = document.getElementById(`details-${docId}`);
     
@@ -1248,7 +1194,6 @@ function calculatePointsDelta(type, delta, pointsDistribution) {
                     console.error('Error saving points distribution: ', error);
                 });
         }
-
 
 function updateDelegatePoints(docId, committee) {
     db.collection('settings').doc('pointsDistribution').get()
@@ -1334,14 +1279,54 @@ function updateDelegatePoints(docId, committee) {
         }
 
         function saveAmendment(amendment) {
-            db.collection('amendments').add(amendment)
-                .then((docRef) => {
-                    console.log("Amendment added with ID: ", docRef.id);
+    const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+    console.log('Committee:', committee);
+
+    if (!committee) {
+        console.error("Committee is not defined or is empty");
+        return;
+    }
+
+    db.collection('amendments').add(amendment)
+        .then((docRef) => {
+            console.log("Amendment added with ID: ", docRef.id);
+
+            // Find delegate document in the committee collection
+            db.collection(committee).where('country', '==', amendment.country).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const delegateDoc = querySnapshot.docs[0];
+                        const delegateId = delegateDoc.id;
+
+                        // Increment amendment count
+                        db.collection(committee).doc(delegateId).update({
+                            amendments: firebase.firestore.FieldValue.increment(1)
+                        }).then(() => {
+                            console.log(`Amendment count updated for ${amendment.country}`);
+                            
+                            // Now update the delegate's total points
+                            updateDelegatePoints(delegateId, committee);
+                        }).catch((error) => {
+                            console.error('Error updating amendment count:', error);
+                        });
+
+                    } else {
+                        console.error(`No delegate found for country: ${amendment.country}`);
+                    }
                 })
                 .catch((error) => {
-                    console.error("Error adding amendment: ", error);
+                    console.error('Error finding delegate:', error);
                 });
-        }
+        })
+        .catch((error) => {
+            console.error("Error adding amendment: ", error);
+        });
+}
+
+
+
+
+        
 
         function markPassed(checkbox, notPassed) {
             const listItem = checkbox.closest('li');
@@ -1409,35 +1394,69 @@ function updateDelegatePoints(docId, committee) {
             saveAmendment(amendment); // Save the updated amendment status
         }
 
-        function deleteAmendment(button) {
-            const listItem = button.closest('li');
-            const amendmentText = listItem.firstChild.textContent.trim();
-            const amendmentType = amendmentText.match(/\((.*?)\)/)[1];
-            const amendmentCountry = amendmentText.split('- ')[1];
-            const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+        function deleteAmendment(docId) {
+    const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
 
-            // Remove the amendment from Firestore
-            db.collection('amendments').where('text', '==', amendmentText).where('committee', '==', committee).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        db.collection('amendments').doc(doc.id).delete()
-                            .then(() => {
-                                console.log('Amendment successfully deleted!');
+    if (!committee) {
+        console.error("Committee is not defined or is empty");
+        return;
+    }
+
+    // Retrieve the amendment's details before deleting
+    db.collection('amendments').doc(docId).get()
+        .then((doc) => {
+            if (doc.exists) {
+                const amendmentData = doc.data();
+                const amendmentCountry = amendmentData.country; // Get the country of the amendment's author
+
+                // Delete the amendment
+                db.collection('amendments').doc(docId).delete()
+                    .then(() => {
+                        console.log('Amendment successfully deleted!');
+                        loadAmendments(); // Reload the amendments list
+
+                        // Find the delegate in the committee collection and decrement their amendment count
+                        db.collection(committee).where('country', '==', amendmentCountry).get()
+                            .then((querySnapshot) => {
+                                if (!querySnapshot.empty) {
+                                    const delegateDoc = querySnapshot.docs[0];
+                                    const delegateId = delegateDoc.id;
+
+                                    // Decrement amendment count
+                                    db.collection(committee).doc(delegateId).update({
+                                        amendments: firebase.firestore.FieldValue.increment(-1) // Decrease amendment count
+                                    }).then(() => {
+                                        console.log(`Amendment count updated for ${amendmentCountry}`);
+
+                                        // Update delegate's total points after decrementing
+                                        updateDelegatePoints(delegateId, committee);
+                                    }).catch((error) => {
+                                        console.error('Error updating amendment count:', error);
+                                    });
+
+                                } else {
+                                    console.error(`No delegate found for country: ${amendmentCountry}`);
+                                }
                             })
                             .catch((error) => {
-                                console.error('Error removing amendment: ', error);
+                                console.error('Error finding delegate:', error);
                             });
+                    })
+                    .catch((error) => {
+                        console.error('Error removing amendment: ', error);
                     });
-                })
-                .catch((error) => {
-                    console.error('Error getting amendments: ', error);
-                });
+            } else {
+                console.error('Amendment not found!');
+            }
+        })
+        .catch((error) => {
+            console.error('Error retrieving amendment details before deletion:', error);
+        });
+}
 
-            listItem.remove(); // Remove the amendment from the list
-        }
-
-        function loadAmendments() {
+function loadAmendments() {
     const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
+    
     db.collection('amendments').where('committee', '==', committee).get()
         .then((querySnapshot) => {
             const amendmentList = document.getElementById('amendmentList');
@@ -1458,6 +1477,7 @@ function updateDelegatePoints(docId, committee) {
             const amendmentTable = document.createElement('table');
             amendmentTable.classList.add('amendment-table');
             amendmentTable.innerHTML = tableHeader;
+
             const previousAmendmentTable = document.createElement('table');
             previousAmendmentTable.classList.add('amendment-table');
             previousAmendmentTable.innerHTML = tableHeader;
@@ -1466,20 +1486,26 @@ function updateDelegatePoints(docId, committee) {
                 const amendment = doc.data();
                 const amendmentRow = document.createElement('tr');
 
-                if (amendment.passed === false) {
+                if (!amendment.passed) {
                     amendmentRow.innerHTML = `
                         <td class="description">${amendment.text}</td>
                         <td>${amendment.type}</td>
                         <td>${amendment.country}</td>
                         <td>
-                            <label><input type="checkbox" onchange="markPassed(this, false)"> Passed</label>
-                            <label><input type="checkbox" onchange="markPassed(this, true)"> Not Passed</label>
+                            <label>
+                                <input type="checkbox" id="pass-${doc.id}" onchange="confirmPass('${doc.id}', '${committee}', true)"> Passed
+                            </label>
+                            <label>
+                                <input type="checkbox" id="fail-${doc.id}" onchange="confirmPass('${doc.id}', '${committee}', false)"> Not Passed
+                            </label>
                         </td>
-                        <td><button class="ammendmentDeleteButton btn btn-hazard" onclick="deleteAmendment('${doc.id}')">
+                        <td>
+                            <button class="ammendmentDeleteButton btn btn-hazard" onclick="deleteAmendment('${doc.id}')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-</svg>
-                            </button></td>
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
                     `;
                     amendmentTable.appendChild(amendmentRow);
                 } else {
@@ -1487,15 +1513,23 @@ function updateDelegatePoints(docId, committee) {
                         <td class="description">${amendment.text}</td>
                         <td>${amendment.type}</td>
                         <td>${amendment.country}</td>
-                        <td>${amendment.passed ? 'Yes' : 'No'}</td>
-                        <td></td>
+                        <td>Yes</td>
+                        <td>
+                            <button class="ammendmentDeleteButton btn btn-hazard" onclick="deleteAmendment('${doc.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
                     `;
                     previousAmendmentTable.appendChild(amendmentRow);
                 }
             });
 
-            amendmentList.appendChild(amendmentTable);
-            previousAmendmentList.appendChild(previousAmendmentTable);
+            // Wrap tables inside scrollable divs
+            amendmentList.innerHTML = `<div class="amendment-container">${amendmentTable.outerHTML}</div>`;
+            previousAmendmentList.innerHTML = `<div class="amendment-container">${previousAmendmentTable.outerHTML}</div>`;
+
         })
         .catch((error) => {
             console.error("Error loading amendments: ", error);
@@ -1504,6 +1538,83 @@ function updateDelegatePoints(docId, committee) {
 
 
 
+
+
+
+
+
+// Function to confirm amendment pass/fail
+function confirmPass(docId, committee, isPassed) {
+    const confirmationMessage = isPassed
+        ? "Are you sure you want to mark this amendment as PASSED?"
+        : "Are you sure you want to mark this amendment as NOT PASSED?";
+
+    if (confirm(confirmationMessage)) {
+        db.collection('amendments').doc(docId).update({ passed: isPassed })
+            .then(() => {
+                console.log(`Amendment ${isPassed ? 'Passed' : 'Not Passed'}`);
+                
+                // Move the amendment to the previous amendments list, regardless of its pass status
+                db.collection('amendments').doc(docId).update({ movedToPrevious: true })
+                    .then(() => {
+                        loadAmendments(); // Reload the amendments list to reflect changes
+                    })
+                    .catch((error) => {
+                        console.error("Error moving amendment to previous list: ", error);
+                    });
+            })
+            .catch((error) => {
+                console.error("Error updating amendment status: ", error);
+            });
+    } else {
+        // Reset the checkbox if the user cancels the confirmation
+        document.getElementById(isPassed ? `pass-${docId}` : `fail-${docId}`).checked = false;
+    }
+}
+
+
+
+
+function showAllAmendmentCountries() {
+    const input = document.getElementById('amendmentCountry');
+    closeAllAmendmentCountryLists();
+    
+    // Create a new list div for the autocomplete options
+    const listDiv = document.createElement("div");
+    listDiv.setAttribute("id", input.id + "autocomplete-list");
+    listDiv.setAttribute("class", "autocomplete-items");
+    listDiv.style.top = input.offsetTop + input.offsetHeight + "px";
+    listDiv.style.left = input.offsetLeft + "px";
+    listDiv.style.width = input.offsetWidth + "px";
+    input.parentNode.appendChild(listDiv);
+
+    // Add country options from the validCountries array
+    validCountries.forEach(country => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = country;
+        itemDiv.innerHTML += "<input type='hidden' value='" + country + "'>";
+        
+        // Add event listener to handle selection
+        itemDiv.addEventListener("click", function(e) {
+            input.value = this.getElementsByTagName("input")[0].value;
+            closeAllAmendmentCountryLists();
+        });
+        listDiv.appendChild(itemDiv);
+    });
+}
+
+// Close all autocomplete country lists
+function closeAllAmendmentCountryLists(element) {
+    const items = document.querySelectorAll(".autocomplete-items");
+    items.forEach(item => {
+        if (element !== item && element !== input) {
+            item.parentNode.removeChild(item);
+        }
+    });
+}
+
+
+document.getElementById('amendmentCountry').addEventListener('input', showAllAmendmentCountries);
 
 
 
@@ -1725,35 +1836,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-
-
-
-
-
 function addPOI() {
     const poiCountry = document.getElementById('poiCountry').value;
     const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
-    const currentTime = firebase.firestore.Timestamp.now(); // Use Firestore timestamp for consistency
+    const currentTime = firebase.firestore.Timestamp.now(); // Firestore timestamp
 
-    db.collection(committee).where('country', '==', poiCountry).get().then((querySnapshot) => {
+    console.log("Committee:", committee);
+    
+    db.collection(committee).where('country', '==', poiCountry).get()
+    .then((querySnapshot) => {
         if (!querySnapshot.empty) {
             const doc = querySnapshot.docs[0];
             const delegateData = doc.data();
-            const currentPOIs = delegateData.POIs || []; // Array to hold POIs
+            const currentPOIs = delegateData.POIs || []; // Ensure array exists
 
-            currentPOIs.push({
-                timestamp: currentTime
-            });
+            // Add new POI timestamp
+            currentPOIs.push({ timestamp: currentTime });
 
             db.collection(committee).doc(doc.id).update({
-                POIs: currentPOIs
+                POIs: currentPOIs,
+                POI: firebase.firestore.FieldValue.increment(1) // Increment total POI count
             }).then(() => {
-                console.log('POI added for', poiCountry);
-
+                console.log(`POI added for ${poiCountry}. Total POIs updated.`);
+                
                 // Update delegate points and refresh POI list
                 updateDelegatePoints(doc.id, committee);
-                loadPOIs(); // Refresh the POI list after adding a new POI
+                loadPOIs(); // Refresh the POI list
                 console.log("Points Updated");
+
                 // Clear the input field
                 document.getElementById('poiCountry').value = '';
             }).catch((error) => {
@@ -1768,11 +1878,13 @@ function addPOI() {
 }
 
 
+
 // Function to load POIs
 function loadPOIs() {
     const committee = document.getElementById('showRuntimeEnvironment').getAttribute('data-committee');
 
     db.collection(committee).get().then((querySnapshot) => {
+        const poiListContainer = document.getElementById('poiListContainer'); // Parent div for scroll
         const poiList = document.getElementById('poiList');
         poiList.innerHTML = ''; // Clear previous list
         let totalPOIs = 0;
@@ -1786,19 +1898,23 @@ function loadPOIs() {
             poiArray.forEach(poi => {
                 const poiItem = document.createElement('li');
                 const timestamp = poi.timestamp ? poi.timestamp.toDate().toLocaleString() : 'Unknown time';
-                poiItem.innerHTML = `${delegate.country} - ${timestamp} <button class='removePOIBTN' style="background-color:none" onclick="deletePOI('${doc.id}', '${committee}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-</svg>
+                poiItem.innerHTML = `${delegate.country} - ${timestamp} 
+                    <button class='removePOIBTN' style="background-color:none" onclick="deletePOI('${doc.id}', '${committee}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
                     </button>`;
 
                 poiList.appendChild(poiItem);
             });
         });
 
-        // Update total POIs
-        const totalPOIsElement = document.getElementById('totalPOIs');
-        totalPOIsElement.innerText = totalPOIs;
+        // Update total POIs count
+        document.getElementById('totalPOIs').innerText = totalPOIs;
+
+        // Ensure container structure remains intact
+        poiListContainer.innerHTML = `<div class="poi-container">${poiList.outerHTML}</div>`;
+
     }).catch((error) => {
         console.error('Error loading POIs:', error);
     });
@@ -1813,21 +1929,33 @@ function loadPOIs() {
 
 
 
-
-// Function to delete a POI
 function deletePOI(docId, committee) {
+    console.log('Run 1');
+    
     if (confirm("Are you sure you want to delete this POI?")) {
+        console.log('Run 2');
+        
         db.collection(committee).doc(docId).get().then((doc) => {
             if (doc.exists) {
+                console.log('Run 3');
+                
                 const poiData = doc.data();
+                let currentPOIs = poiData.POIs || []; // Get current POIs array
                 const currentPOICount = poiData.POI || 0;
 
-                // Ensure POI count doesn't go negative
-                if (currentPOICount > 0) {
+                console.log('Run 4');
+                console.log("POIs Array:", currentPOIs);
+                console.log("Total POI Count:", currentPOICount);
+
+                // Ensure there's at least one POI to remove
+                if (currentPOICount > 0 && currentPOIs.length > 0) {
+                    currentPOIs.pop(); // Remove the last POI entry
+
                     db.collection(committee).doc(docId).update({
-                        POI: currentPOICount - 1
+                        POIs: currentPOIs, // Update array
+                        POI: firebase.firestore.FieldValue.increment(-1) // Decrement total POI count
                     }).then(() => {
-                        console.log('POI count decremented for', poiData.country);
+                        console.log(`POI count decremented for ${poiData.country}`);
                         updateDelegatePoints(docId, committee); // Update delegate points after POI deletion
 
                         // Reload POIs list after deletion
@@ -1835,13 +1963,17 @@ function deletePOI(docId, committee) {
                     }).catch((error) => {
                         console.error('Error decrementing POI count:', error);
                     });
+                } else {
+                    console.warn('No POIs to delete for', poiData.country);
                 }
+                console.log('Run 5');
             }
         }).catch((error) => {
             console.error('Error deleting POI:', error);
         });
     }
 }
+
 
 
 
@@ -1885,51 +2017,65 @@ function loadAllChatMessages() {
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.innerHTML = ''; // Clear previous messages
 
-    db.collection('chats')
-        .orderBy('timestamp', 'asc')
-        .onSnapshot((querySnapshot) => {
-            chatContainer.innerHTML = ''; // Clear previous messages
-            const user = firebase.auth().currentUser;
-            db.collection('users').doc(user.uid).get().then((doc) => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    const userCommittee = userData.committee;
+    const user = firebase.auth().currentUser;
 
-                    querySnapshot.forEach((doc) => {
-                        const message = doc.data();
-                        const senderName = `${message.senderName}`;
-                        const text = message.text || message.message || 'No content';
-                        const timestamp = new Date(message.timestamp.toDate()).toLocaleString();
+    if (!user) {
+        console.error("User not authenticated");
+        return;
+    }
 
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('message');
-                        messageElement.classList.add(message.senderCommittee === userCommittee ? 'sent' : 'received');
+    // Fetch user data ONCE
+    db.collection('users').doc(user.uid).get().then((doc) => {
+        if (!doc.exists) {
+            console.error("User data not found");
+            return;
+        }
 
-                        const senderElement = document.createElement('div');
-                        senderElement.classList.add('chat-sender');
-                        senderElement.innerText = senderName;
+        const userData = doc.data();
+        const userCommittee = userData.committee;
 
-                        const textElement = document.createElement('div');
-                        textElement.innerText = text;
+        // Attach Firestore listener
+        db.collection('chats')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot((querySnapshot) => {
+                chatContainer.innerHTML = ''; // Clear previous messages
 
-                        const timestampElement = document.createElement('div');
-                        timestampElement.classList.add('chat-timestamp');
-                        timestampElement.innerText = timestamp;
+                querySnapshot.forEach((doc) => {
+                    const message = doc.data();
+                    const senderName = `${message.senderName}`;
+                    const text = message.text || message.message || 'No content';
+                    const timestamp = new Date(message.timestamp.toDate()).toLocaleString();
 
-                        messageElement.appendChild(senderElement);
-                        messageElement.appendChild(textElement);
-                        messageElement.appendChild(timestampElement);
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.classList.add(message.senderCommittee === userCommittee ? 'sent' : 'received');
 
-                        chatContainer.appendChild(messageElement);
-                    });
-                    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
-                }
-            }).catch((error) => {
-                console.error('Error fetching user data:', error);
+                    const senderElement = document.createElement('div');
+                    senderElement.classList.add('chat-sender');
+                    senderElement.innerText = senderName;
+
+                    const textElement = document.createElement('div');
+                    textElement.innerText = text;
+
+                    const timestampElement = document.createElement('div');
+                    timestampElement.classList.add('chat-timestamp');
+                    timestampElement.innerText = timestamp;
+
+                    messageElement.appendChild(senderElement);
+                    messageElement.appendChild(textElement);
+                    messageElement.appendChild(timestampElement);
+
+                    chatContainer.appendChild(messageElement);
+                });
+
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+            }, (error) => {
+                console.error('Error fetching messages:', error);
             });
-        }, (error) => {
-            console.error('Error fetching messages:', error);
-        });
+
+    }).catch((error) => {
+        console.error('Error fetching user data:', error);
+    });
 }
 
 function sendMessageToGroupChat() {
@@ -1982,8 +2128,6 @@ document.getElementById('showChat').addEventListener('click', function (event) {
     closeSidebar();
     loadAllChatMessages(); // Load all chat messages
 });
-
-
 
 
 
@@ -2122,7 +2266,6 @@ firebase.auth().onAuthStateChanged((user) => {
             });
         }
 
-       
 
         let sortOrder = {};
         function sortTable(columnIndex) {
@@ -2167,45 +2310,7 @@ firebase.auth().onAuthStateChanged((user) => {
                 }
             });
         });
-
-
-        const auth = firebase.auth();
-
-        // Log out function
-        function logoutUser() {
-            const confirmation = confirm("Are you sure you want to log out?");
-            if (confirmation) {
-                auth.signOut().then(() => {
-                    // Clear the session or local storage, if applicable
-                    localStorage.clear();
-                    sessionStorage.clear();
-
-                    // Disable the back button by clearing the history state
-                    window.location.href = 'Login.html';  // Redirect to login page after successful logout
-                }).catch((error) => {
-                    console.error("Error logging out:", error);
-                });
-            }
-        }
-
-        // Prevent back navigation after logout by clearing the history state
-        window.onpopstate = function (event) {
-            // After logging out, disable the back button
-            history.pushState(null, "", window.location.href);
-        };
-
-        // Ensure that if the user presses the back button, they remain on the login page
-        window.addEventListener('load', function () {
-            history.pushState(null, "", window.location.href);
-            window.onpopstate = function () {
-                history.pushState(null, "", window.location.href);
-            };
-        });
-        
-         
     </script>
-   
-    
 </body>
 
 </html>
