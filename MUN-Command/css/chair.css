@@ -192,7 +192,7 @@ body, html {
 .amendment-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: rgb(165, 165, 165);
 }
 
 .amendment-table th, .amendment-table td {
@@ -202,11 +202,12 @@ body, html {
 }
 
 .amendment-table th {
-    background-color: #f2f2f2;
+    background-color: rgb(165, 165, 165);
     font-weight: bold;
 }
 
 .description {
+    background-color:rgb(165, 165, 165);
     white-space: pre-wrap; /* Allows the text to wrap onto multiple lines */
 }
 
@@ -236,4 +237,44 @@ button:hover {
     margin-top:15px;
     margin-left:10px;
     
+}
+
+
+.login-card {
+    width: 450px;  /* Increased width */
+    padding: 40px;
+    box-shadow: 0px 0px 10px 2px rgba(97, 96, 96, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #add8e6;
+    background: linear-gradient(to right, #add8e6, #00aaff);
+}
+
+.amendment-container {
+    max-height: 200px; /* Adjust this value to fit 3 amendments */
+    overflow-y: auto;  /* Enables vertical scrolling */
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.poi-container {
+    max-height: 200px;  /* Adjust based on the height of ~3 POIs */
+    overflow-y: auto;   /* Enable scrolling when content exceeds max height */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.delegateContainer{
+    max-height: 40px;  /* Adjust based on the height of ~3 POIs */
+    overflow-y: auto;   /* Enable scrolling when content exceeds max height */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
 }
