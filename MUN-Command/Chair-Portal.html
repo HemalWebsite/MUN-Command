@@ -38,12 +38,12 @@
     </style>
 </head>
 
-<body style="background-color: #add8e6; background: linear-gradient(to right, #add8e6, #00aaff);">
-    
+<body>
+
 <!-- Login -->
     <div class="wrapper">
         <div class="card" id="login-container">
-            <h2 class="text-center mb-4">Login</h2>
+            <h2 class="text-center mb-4">Chair Login</h2>
             <div class="card-body">
                 <input type="email" class="LoginTextBoxes" id="email" placeholder="Email">
                 <input type="password" class="LoginTextBoxes" id="password" placeholder="Password">
@@ -66,6 +66,9 @@
                 <a class="nav-link" href="#" id="showDelegates">Delegates</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" id="showPOIs">POIs</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" id="showRuntimeEnvironment">Speech</a>
             </li>
             <li class="nav-item">
@@ -75,7 +78,10 @@
                 <a class="nav-link" href="#" id="showAttendance">Attendance</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" id="showPOIs">POIs</a>
+                <a class="nav-link" href="#" id="showMarkingSheet">Check List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="showRating">Delegate Rating</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" id="showChat">Chat</a>
@@ -345,6 +351,36 @@
            
         </div>
 
+
+
+        <div id="contentRating" style="display: none;">
+            <div class="container">
+                <div class="card" style="width: 100%;">
+                    <h1>Delegate Rating</h1>
+                    <table class="table table-striped table-hover my-4">
+                        <thead id="rating-table-head"></thead>
+                        <tbody id="rating-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="contentMarkingSheet" style="display: none;">
+            <div class="container">
+                <div class="card" style="width: 100%;">
+                    <h1>Check List</h1>
+                    <table class="table table-striped table-hover my-4">
+                        <thead id="marking-table-head"></thead>
+                        <tbody id="marking-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+
         
 
         
@@ -427,6 +463,9 @@
             document.getElementById('contentAttendance').style.display = 'none';
             document.getElementById('contentPOIs').style.display = 'none';
             document.getElementById('contentChat').style.display = 'none';
+
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
             loadDelegates();
         });
@@ -439,6 +478,8 @@
             document.getElementById('contentAttendance').style.display = 'none';
             document.getElementById('contentPOIs').style.display = 'none';
             document.getElementById('contentChat').style.display = 'none';
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
         });
 
@@ -450,6 +491,8 @@
             document.getElementById('contentAttendance').style.display = 'none';
             document.getElementById('contentPOIs').style.display = 'none';
             document.getElementById('contentChat').style.display = 'none';
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
             loadAmendments();
         });
@@ -462,6 +505,8 @@
             document.getElementById('contentAttendance').style.display = 'block';
             document.getElementById('contentPOIs').style.display = 'none';
             document.getElementById('contentChat').style.display = 'none';
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
             loadAttendance();
         });
@@ -474,6 +519,8 @@
             document.getElementById('contentAttendance').style.display = 'none';
             document.getElementById('contentPOIs').style.display = 'block';
             document.getElementById('contentChat').style.display = 'none';
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
             loadPOIs();
         });
@@ -486,8 +533,56 @@
             document.getElementById('contentAttendance').style.display = 'none';
             document.getElementById('contentPOIs').style.display = 'none';
             document.getElementById('contentChat').style.display = 'block';
+            document.getElementById('contentRating').style.display = 'none';
+            document.getElementById('contentMarkingSheet').style.display = 'none';
             closeSidebar();
         });
+
+        document.getElementById('showRating').addEventListener('click', function (event) {
+    event.preventDefault();  // Prevent default page reload on link click
+    
+    // Hide all sections
+    document.getElementById('contentDelegates').style.display = 'none';
+    document.getElementById('contentRuntime').style.display = 'none';
+    document.getElementById('contentAmendments').style.display = 'none';
+    document.getElementById('contentAttendance').style.display = 'none';
+    document.getElementById('contentPOIs').style.display = 'none';
+    document.getElementById('contentChat').style.display = 'none';
+    document.getElementById('contentMarkingSheet').style.display = 'none';
+    
+    // Show the Rating section
+    document.getElementById('contentRating').style.display = 'block';
+    
+    // Optionally close any sidebar if you have one
+    closeSidebar();
+
+    // Load the Rating data
+    loadRating();
+});
+
+document.getElementById('showMarkingSheet').addEventListener('click', function (event) {
+    event.preventDefault();
+    
+    // Hide all other sections
+    document.getElementById('contentDelegates').style.display = 'none';
+    document.getElementById('contentRuntime').style.display = 'none';
+    document.getElementById('contentAmendments').style.display = 'none';
+    document.getElementById('contentAttendance').style.display = 'none';
+    document.getElementById('contentPOIs').style.display = 'none';
+    document.getElementById('contentChat').style.display = 'none';
+    document.getElementById('contentRating').style.display = 'none';
+    
+    // Show the Marking Sheet section
+    document.getElementById('contentMarkingSheet').style.display = 'block';
+    
+    // Optionally, call a function to load the Marking Sheet data (if needed)
+    loadMarkingSheet();
+    
+    // Optionally, close the sidebar if needed
+    closeSidebar();
+});
+
+
 
      
 
@@ -834,6 +929,34 @@ function formatTime(seconds) {
 }
 
 
+// function updateDelegatePoints(docId, committee) {
+//     db.collection('settings').doc('pointsDistribution').get()
+//         .then((doc) => {
+//             if (doc.exists) {
+//                 const pointsDistribution = doc.data();
+//                 db.collection(committee).doc(docId).get()
+//                     .then((delegateDoc) => {
+//                         if (delegateDoc.exists) {
+//                             const delegate = delegateDoc.data();
+//                             let totalPoints = (delegate.POI * pointsDistribution.pois) +
+//                                 (delegate.speech * pointsDistribution.speeches) + (delegate.speechQuality) + (delegate.poiQuality) + (delegate.unfriendlyAmendmentQuality);
+//                             if (delegate.amendments) {
+//                                 totalPoints += delegate.amendments * pointsDistribution.amendments;
+//                             }
+//                             if (delegate.friendlyAmendments) {
+//                                 totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+//                             }
+//                             db.collection(committee).doc(docId).update({
+//                                 points: totalPoints
+//                             });
+//                         }
+//                     });
+//             }
+//         })
+//         .catch((error) => {
+//             console.error('Error updating delegate points: ', error);
+//         });
+// }
 function updateDelegatePoints(docId, committee) {
     db.collection('settings').doc('pointsDistribution').get()
         .then((doc) => {
@@ -843,23 +966,43 @@ function updateDelegatePoints(docId, committee) {
                     .then((delegateDoc) => {
                         if (delegateDoc.exists) {
                             const delegate = delegateDoc.data();
-                            let totalPoints = (delegate.POI * pointsDistribution.pois) +
-                                (delegate.speech * pointsDistribution.speeches);
+
+                            // Get the current total points (if it exists), otherwise default to 0
+                            let totalPoints = delegate.points || 0;
+
+                            // Ensure all quality points are set to 0 if their corresponding fields are empty
+                            const speechQuality = delegate.rating && delegate.rating.speechQuality ? delegate.rating.speechQuality : 0;
+                            const poiQuality = delegate.rating && delegate.rating.poiQuality ? delegate.rating.poiQuality : 0;
+                            const unfriendlyAmendmentQuality = delegate.rating && delegate.rating.unfriendlyAmendmentQuality ? delegate.rating.unfriendlyAmendmentQuality : 0;
+
+                            // Add the quality points (speechQuality, poiQuality, unfriendlyAmendmentQuality)
+                            totalPoints += speechQuality + poiQuality + unfriendlyAmendmentQuality;
+
+                            // Add points from POI, Speech, Amendments, etc.
+                            totalPoints += (delegate.POI || 0) * pointsDistribution.pois;
+                            totalPoints += (delegate.speech || 0) * pointsDistribution.speeches;
+
                             if (delegate.amendments) {
-                                totalPoints += delegate.amendments * pointsDistribution.amendments;
+                                totalPoints += (delegate.amendments || 0) * pointsDistribution.amendments;
                             }
                             if (delegate.friendlyAmendments) {
-                                totalPoints += delegate.friendlyAmendments * pointsDistribution.friendlyAmendments;
+                                totalPoints += (delegate.friendlyAmendments || 0) * pointsDistribution.friendlyAmendments;
                             }
+
+                            // Update the delegate document with the new total points
                             db.collection(committee).doc(docId).update({
                                 points: totalPoints
+                            }).then(() => {
+                                console.log('Delegate points updated successfully');
+                            }).catch((error) => {
+                                console.error('Error updating delegate points: ', error);
                             });
                         }
                     });
             }
         })
         .catch((error) => {
-            console.error('Error updating delegate points: ', error);
+            console.error('Error fetching points distribution: ', error);
         });
 }
 
@@ -1619,6 +1762,7 @@ document.getElementById('amendmentCountry').addEventListener('input', showAllAme
 
 
 
+
 function loadAttendance() {
     const attendanceTableBody = document.getElementById('attendance-table-body');
     const attendanceTableHead = document.getElementById('attendance-table-head');
@@ -2310,6 +2454,496 @@ firebase.auth().onAuthStateChanged((user) => {
                 }
             });
         });
+
+
+
+//         function loadRating() {
+//     const ratingTableBody = document.getElementById('rating-table-body');
+//     const ratingTableHead = document.getElementById('rating-table-head');
+//     ratingTableBody.innerHTML = ''; // Clear previous rows
+//     ratingTableHead.innerHTML = ''; // Clear previous headers
+
+//     firebase.auth().onAuthStateChanged((user) => {
+//         if (user) {
+//             db.collection('users').doc(user.uid).get().then((doc) => {
+//                 if (doc.exists) {
+//                     const userData = doc.data();
+//                     const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
+                    
+//                     db.collection(committee).get().then(querySnapshot => {
+//                         let headersRow = `<tr>
+//                             <th>First Name</th>
+//                             <th>Last Name</th>
+//                             <th>Country</th>
+//                             <th>Speech Quality</th>
+//                             <th>POI Quality</th>
+//                             <th>Unfriendly Amendment Quality</th>
+//                         </tr>`;
+//                         ratingTableHead.innerHTML = headersRow;
+
+//                         querySnapshot.forEach((doc) => {
+//                             const delegate = doc.data();
+//                             let ratingRow = `<tr>
+//                                 <td>${delegate.firstName}</td>
+//                                 <td>${delegate.lastName}</td>
+//                                 <td>${delegate.country}</td>
+//                                 <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="speechQuality" value="${delegate.rating && delegate.rating.speechQuality || ''}"></td>
+//                                 <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="poiQuality" value="${delegate.rating && delegate.rating.poiQuality || ''}"></td>
+//                                 <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="unfriendlyAmendmentQuality" value="${delegate.rating && delegate.rating.unfriendlyAmendmentQuality || ''}"></td>
+//                             </tr>`;
+//                             ratingTableBody.innerHTML += ratingRow;
+//                         });
+
+//                         // Add event listeners for rating inputs
+//                         const ratingInputs = document.querySelectorAll('.rating-input');
+//                         ratingInputs.forEach(input => {
+//                             input.addEventListener('input', function () {
+//                                 updateDelegatePointsRating(input);
+//                             });
+//                         });
+//                     }).catch((error) => {
+//                         console.error('Error fetching delegates:', error);
+//                     });
+//                 }
+//             }).catch((error) => {
+//                 console.error('Error fetching user data:', error);
+//             });
+//         }
+//     });
+// }
+
+
+
+// function updateDelegatePointsRating(inputElement) {
+//     const committee = inputElement.getAttribute('data-committee');
+//     const docId = inputElement.getAttribute('data-docid');
+//     const type = inputElement.getAttribute('data-type');
+//     const ratingValue = parseInt(inputElement.value, 10);
+
+//     // Check if the rating value is valid (between 1 and 10)
+//     if (ratingValue >= 1 && ratingValue <= 10) {
+//         const delegateRef = db.collection(committee).doc(docId);
+
+//         delegateRef.get().then((doc) => {
+//             if (doc.exists) {
+//                 const delegate = doc.data();
+//                 const ratings = delegate.rating || {};
+
+//                 // Update the specific rating (speechQuality, poiQuality, unfriendlyAmendmentQuality)
+//                 ratings[type] = ratingValue;
+
+//                 // Get the current total points, if it exists, or initialize to 0
+//                 let totalPoints = delegate.totalPoints || 0; 
+
+//                 // Check if the rating field has been updated before to avoid multiple additions
+//                 if (!delegate.ratingUpdatedFields) {
+//                     delegate.ratingUpdatedFields = {};
+//                 }
+
+//                 // If this rating field was not updated before, add 1 point to the total points
+//                 if (!delegate.ratingUpdatedFields[type]) {
+//                     delegate.ratingUpdatedFields[type] = true;
+//                     totalPoints += 1; // Add 1 point for this field update
+//                 }
+
+//                 // Update the delegate's ratings, total points, and track which fields were updated
+//                 delegateRef.update({
+//                     rating: ratings,
+//                     points: totalPoints,
+//                     ratingUpdatedFields: delegate.ratingUpdatedFields
+//                 }).then(() => {
+//                     console.log('Delegate rating and total points updated');
+//                 }).catch((error) => {
+//                     console.error('Error updating delegate rating: ', error);
+//                 });
+//             }
+//         }).catch((error) => {
+//             console.error('Error getting delegate: ', error);
+//         });
+//     } else {
+//         console.warn('Invalid rating value');
+//     }
+// }
+
+
+function loadRating() {
+    const ratingTableBody = document.getElementById('rating-table-body');
+    const ratingTableHead = document.getElementById('rating-table-head');
+    ratingTableBody.innerHTML = ''; // Clear previous rows
+    ratingTableHead.innerHTML = ''; // Clear previous headers
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
+                    
+                    db.collection(committee).get().then(querySnapshot => {
+                        let headersRow = `<tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Country</th>
+                            <th>Speech Quality</th>
+                            <th>POI Quality</th>
+                            <th>Unfriendly Amendment Quality</th>
+                        </tr>`;
+                        ratingTableHead.innerHTML = headersRow;
+
+                        querySnapshot.forEach((doc) => {
+                            const delegate = doc.data();
+                            let ratingRow = `<tr>
+                                <td>${delegate.firstName}</td>
+                                <td>${delegate.lastName}</td>
+                                <td>${delegate.country}</td>
+                                <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="speechQuality" value="${delegate.rating && delegate.rating.speechQuality || ''}"></td>
+                                <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="poiQuality" value="${delegate.rating && delegate.rating.poiQuality || ''}"></td>
+                                <td><input type="number" min="1" max="10" class="rating-input" data-committee="${committee}" data-docid="${doc.id}" data-type="unfriendlyAmendmentQuality" value="${delegate.rating && delegate.rating.unfriendlyAmendmentQuality || ''}"></td>
+                            </tr>`;
+                            ratingTableBody.innerHTML += ratingRow;
+                        });
+
+                        // Add event listeners for rating inputs
+                        const ratingInputs = document.querySelectorAll('.rating-input');
+                        ratingInputs.forEach(input => {
+                            input.addEventListener('input', function () {
+                                updateDelegatePointsRating(input);
+                            });
+                        });
+                    }).catch((error) => {
+                        console.error('Error fetching delegates:', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+    });
+}
+
+// function updateDelegatePointsRating(inputElement) {
+//     const committee = inputElement.getAttribute('data-committee');
+//     const docId = inputElement.getAttribute('data-docid');
+//     const type = inputElement.getAttribute('data-type');
+//     const ratingValue = parseInt(inputElement.value, 10);
+
+//     // If the input is empty or invalid, set the rating value to 0
+//     const finalRatingValue = (ratingValue >= 1 && ratingValue <= 10) ? ratingValue : 0;
+
+//     const delegateRef = db.collection(committee).doc(docId);
+
+//     delegateRef.get().then((doc) => {
+//         if (doc.exists) {
+//             const delegate = doc.data();
+//             const ratings = delegate.rating || {};
+
+//             // Update the specific rating (speechQuality, poiQuality, unfriendlyAmendmentQuality)
+//             ratings[type] = finalRatingValue;
+
+//             // Fetch the current total points (if it exists)
+//             let totalPoints = delegate.points || 0;
+
+//             // Add the new quality rating to the total points
+//             totalPoints += finalRatingValue;
+
+//             // Update the delegate's ratings and total points in Firestore
+//             delegateRef.update({
+//                 rating: ratings,
+//                 points: totalPoints
+//             }).then(() => {
+//                 console.log('Delegate rating and total points updated');
+//             }).catch((error) => {
+//                 console.error('Error updating delegate rating: ', error);
+//             });
+//         }
+//     }).catch((error) => {
+//         console.error('Error getting delegate: ', error);
+//     });
+// }
+
+function updateDelegatePointsRating(inputElement) {
+    const committee = inputElement.getAttribute('data-committee');
+    const docId = inputElement.getAttribute('data-docid');
+    const type = inputElement.getAttribute('data-type');
+    const ratingValue = parseInt(inputElement.value, 10);
+
+    // If the input is empty or invalid, set the rating value to 0
+    const finalRatingValue = (ratingValue >= 1 && ratingValue <= 10) ? ratingValue : 0;
+
+    const delegateRef = db.collection(committee).doc(docId);
+
+    delegateRef.get().then((doc) => {
+        if (doc.exists) {
+            const delegate = doc.data();
+            const ratings = delegate.rating || {};
+
+            // Update the specific rating (speechQuality, poiQuality, unfriendlyAmendmentQuality)
+            ratings[type] = finalRatingValue;
+
+            // Fetch other existing attributes (POI, speech, etc.)
+            const poi = delegate.POI || 0;
+            const speech = delegate.speech || 0;
+            const speechQuality = ratings.speechQuality || 0;
+            const poiQuality = ratings.poiQuality || 0;
+            const unfriendlyAmendmentQuality = ratings.unfriendlyAmendmentQuality || 0;
+            const amendments = delegate.amendments || 0;
+            const friendlyAmendments = delegate.friendlyAmendments || 0;
+
+            // Recalculate total points based on the existing ratings and other attributes
+            let totalPoints = (poi * 1) + (speech * 1) + speechQuality + poiQuality + unfriendlyAmendmentQuality;
+
+            if (amendments) {
+                totalPoints += amendments * 1; // Amendments could have a different multiplier
+            }
+
+            if (friendlyAmendments) {
+                totalPoints += friendlyAmendments * 1; // Friendly amendments could have a different multiplier
+            }
+
+            // Update the delegate's ratings and total points in Firestore
+            delegateRef.update({
+                rating: ratings,
+                points: totalPoints
+            }).then(() => {
+                console.log('Delegate rating and total points updated');
+            }).catch((error) => {
+                console.error('Error updating delegate rating: ', error);
+            });
+        }
+    }).catch((error) => {
+        console.error('Error getting delegate: ', error);
+    });
+}
+
+
+
+
+
+// function loadMarkingSheet() {
+//     const markingTableBody = document.getElementById('marking-table-body');
+//     const markingTableHead = document.getElementById('marking-table-head');
+//     markingTableBody.innerHTML = ''; // Clear previous rows
+//     markingTableHead.innerHTML = ''; // Clear previous headers
+
+//     firebase.auth().onAuthStateChanged((user) => {
+//         if (user) {
+//             db.collection('users').doc(user.uid).get().then((doc) => {
+//                 if (doc.exists) {
+//                     const userData = doc.data();
+//                     const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
+
+//                     // Fetch delegates from the Firestore committee collection
+//                     db.collection(committee).get().then(querySnapshot => {
+//                         if (querySnapshot.empty) {
+//                             console.log('No delegates found in the committee');
+//                             return; // If no delegates exist, log a message
+//                         }
+
+//                         // Set up the table header
+//                         let headersRow = `<tr>
+//                             <th>First Name</th>
+//                             <th>Last Name</th>
+//                             <th>Country</th>
+//                             <th>Opening Speech</th>
+//                             <th>Position Paper</th>
+//                         </tr>`;
+//                         markingTableHead.innerHTML = headersRow;
+
+//                         // Loop through the delegates and generate table rows
+//                         querySnapshot.forEach((doc) => {
+//                             const delegate = doc.data();
+
+//                             // Generate table row with checkboxes for opening speech and position paper
+//                             let markingRow = `<tr>
+//                                 <td>${delegate.firstName || 'N/A'}</td>
+//                                 <td>${delegate.lastName || 'N/A'}</td>
+//                                 <td>${delegate.country || 'N/A'}</td>
+//                                 <td><input type="checkbox" class="marking-checkbox" data-committee="${committee}" data-docid="${doc.id}" data-type="openingSpeech" ${delegate.openingSpeech ? 'checked' : ''}></td>
+//                                 <td><input type="checkbox" class="marking-checkbox" data-committee="${committee}" data-docid="${doc.id}" data-type="positionPaper" ${delegate.positionPaper ? 'checked' : ''}></td>
+//                             </tr>`;
+//                             markingTableBody.innerHTML += markingRow;
+//                         });
+
+//                         // Add event listeners for checkbox inputs
+//                         const markingCheckboxes = document.querySelectorAll('.marking-checkbox');
+//                         markingCheckboxes.forEach(checkbox => {
+//                             checkbox.addEventListener('change', function () {
+//                                 updateDelegateMarkingSheet(checkbox);
+//                             });
+//                         });
+//                     }).catch((error) => {
+//                         console.error('Error fetching delegates:', error);
+//                     });
+//                 }
+//             }).catch((error) => {
+//                 console.error('Error fetching user data:', error);
+//             });
+//         }
+//     });
+// }
+
+// function updateDelegateMarkingSheet(checkboxElement) {
+//     const committee = checkboxElement.getAttribute('data-committee');
+//     const docId = checkboxElement.getAttribute('data-docid');
+//     const type = checkboxElement.getAttribute('data-type');
+//     const isChecked = checkboxElement.checked;
+
+//     const delegateRef = db.collection(committee).doc(docId);
+
+//     delegateRef.get().then((doc) => {
+//         if (doc.exists) {
+//             const delegate = doc.data();
+//             const updatedMarkings = delegate.marking || {};
+
+//             // Update the specific marking (openingSpeech, positionPaper)
+//             updatedMarkings[type] = isChecked;
+
+//             // Update the delegate's marking fields in Firestore
+//             delegateRef.update({
+//                 marking: updatedMarkings
+//             }).then(() => {
+//                 console.log('Delegate marking updated');
+//             }).catch((error) => {
+//                 console.error('Error updating delegate marking: ', error);
+//             });
+//         }
+//     }).catch((error) => {
+//         console.error('Error getting delegate: ', error);
+//     });
+// }
+
+function loadMarkingSheet() {
+    const markingTableBody = document.getElementById('marking-table-body');
+    const markingTableHead = document.getElementById('marking-table-head');
+    
+    // Debugging: Check if elements are found
+    console.log('markingTableBody:', markingTableBody);
+    console.log('markingTableHead:', markingTableHead);
+
+    if (!markingTableBody || !markingTableHead) {
+        console.error('Error: Table body or head element not found!');
+        return; // Exit the function early if the elements are not found
+    }
+
+    markingTableBody.innerHTML = ''; // Clear previous rows
+    markingTableHead.innerHTML = ''; // Clear previous headers
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
+
+                    // Fetch delegates from the Firestore committee collection
+                    db.collection(committee).get().then(querySnapshot => {
+                        if (querySnapshot.empty) {
+                            console.log('No delegates found in the committee');
+                            return; // If no delegates exist, log a message
+                        }
+
+                        // Set up the table header
+                        let headersRow = `<tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Country</th>
+                            <th>Opening Speech</th>
+                            <th>Position Paper</th>
+                        </tr>`;
+                        markingTableHead.innerHTML = headersRow;
+
+                        // Loop through the delegates and generate table rows
+                        querySnapshot.forEach((doc) => {
+                            const delegate = doc.data();
+
+                            // Generate table row with checkboxes for opening speech and position paper
+                            let markingRow = `<tr>
+                                <td>${delegate.firstName || 'N/A'}</td>
+                                <td>${delegate.lastName || 'N/A'}</td>
+                                <td>${delegate.country || 'N/A'}</td>
+                                <td><input type="checkbox" class="marking-checkbox" data-committee="${committee}" data-docid="${doc.id}" data-type="openingSpeech" ${delegate.openingSpeech ? 'checked' : ''}></td>
+                                <td><input type="checkbox" class="marking-checkbox" data-committee="${committee}" data-docid="${doc.id}" data-type="positionPaper" ${delegate.positionPaper ? 'checked' : ''}></td>
+                            </tr>`;
+                            markingTableBody.innerHTML += markingRow;
+                        });
+
+                        // Load marking sheet status (set checkbox states)
+                        loadMarkingSheetStatus(); // New function to load the marking sheet status
+
+                        // Add event listeners for checkbox inputs
+                        const markingCheckboxes = document.querySelectorAll('.marking-checkbox');
+                        markingCheckboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', function () {
+                                updateDelegateMarkingSheet(checkbox); // Update delegate when checkbox is changed
+                            });
+                        });
+                    }).catch((error) => {
+                        console.error('Error fetching delegates:', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+    });
+}
+
+function loadMarkingSheetStatus() {
+    const markingTableBody = document.getElementById('marking-table-body');
+    const checkboxes = markingTableBody.querySelectorAll('input[type="checkbox"]');
+
+    checkboxes.forEach(checkbox => {
+        const committee = checkbox.getAttribute('data-committee');
+        const docId = checkbox.getAttribute('data-docid');
+        const type = checkbox.getAttribute('data-type'); // "openingSpeech" or "positionPaper"
+
+        db.collection(committee).doc(docId).get().then((doc) => {
+            if (doc.exists) {
+                const delegate = doc.data();
+                // Check the status for the respective type (openingSpeech/positionPaper)
+                if (delegate[type]) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            }
+        }).catch((error) => {
+            console.error('Error loading marking sheet status: ', error);
+        });
+    });
+}
+
+function updateDelegateMarkingSheet(checkbox) {
+    const committee = checkbox.getAttribute('data-committee');
+    const docId = checkbox.getAttribute('data-docid');
+    const type = checkbox.getAttribute('data-type');
+    const isChecked = checkbox.checked;
+
+    const delegateRef = db.collection(committee).doc(docId);
+    
+    delegateRef.get().then((doc) => {
+        if (doc.exists) {
+            const delegate = doc.data();
+            const updatedData = {
+                [type]: isChecked // Update the specific field (openingSpeech or positionPaper)
+            };
+
+            delegateRef.update(updatedData).then(() => {
+                console.log(`${type} updated successfully`);
+            }).catch((error) => {
+                console.error('Error updating marking sheet:', error);
+            });
+        }
+    }).catch((error) => {
+        console.error('Error fetching delegate document:', error);
+    });
+}
+
+
+
+
+
+
     </script>
 </body>
 
