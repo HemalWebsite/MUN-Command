@@ -261,9 +261,10 @@ body {
     /* justify-content: center;
     align-items: center; */
     min-height: 100vh;
-    background-color: #add8e6;
-    background: linear-gradient(to right, #add8e6, #00aaff);
-    
+    /* background-color: #add8e6;
+    background: linear-gradient(to right, #add8e6, #00aaff); */
+    background-image: url(background.jpg);
+
 }
 
 .amendment-container {
