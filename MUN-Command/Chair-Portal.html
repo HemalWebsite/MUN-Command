@@ -1761,8 +1761,6 @@ document.getElementById('amendmentCountry').addEventListener('input', showAllAme
 
 
 
-
-
 function loadAttendance() {
     const attendanceTableBody = document.getElementById('attendance-table-body');
     const attendanceTableHead = document.getElementById('attendance-table-head');
@@ -1776,40 +1774,55 @@ function loadAttendance() {
                     const userData = doc.data();
                     const committee = userData.committee || "ICJ"; // Default to "ICJ" if committee not set
                     
-                    // Load number of days from settings
+                    // Load number of days from conferenceTimeline
                     db.collection('settings').doc('conferenceTimeline').get().then(doc => {
                         const numberOfDays = doc.exists ? doc.data().days : 3; // Default to 3 days if not set
 
-                        let headersRow = `<tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Country</th>`;
-                        
-                        for (let i = 1; i <= numberOfDays; i++) {
-                            headersRow += `<th>Day ${i}</th>`;
-                        }
-                        headersRow += `</tr>`;
-                        attendanceTableHead.innerHTML = headersRow;
+                        // Load sessions per day from conferenceSessions
+                        db.collection('settings').doc('conferenceSessions').get().then(doc => {
+                            const sessionsPerDay = doc.exists ? doc.data().sessionsPerDay : 1; // Default to 1 session per day if not set
 
-                        db.collection(committee).get().then(querySnapshot => {
-                            querySnapshot.forEach((doc) => {
-                                const delegate = doc.data();
-                                let attendanceRow = `<tr>
-                                    <td>${delegate.firstName}</td>
-                                    <td>${delegate.lastName}</td>
-                                    <td>${delegate.country}</td>`;
-
-                                for (let i = 1; i <= numberOfDays; i++) {
-                                    attendanceRow += `<td><input type="checkbox" data-committee="${committee}" data-docid="${doc.id}" data-day="day${i}" ${delegate.attendance && delegate.attendance[`day${i}`] ? 'checked' : ''}></td>`;
+                            // Generate table headers based on days and sessions per day
+                            let headersRow = `<tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Country</th>`;
+                            
+                            for (let i = 1; i <= numberOfDays; i++) {
+                                for (let j = 1; j <= sessionsPerDay; j++) {
+                                    headersRow += `<th>Day ${i}.${j}</th>`;
                                 }
+                            }
+                            headersRow += `</tr>`;
+                            attendanceTableHead.innerHTML = headersRow;
 
-                                attendanceRow += '</tr>';
-                                attendanceTableBody.innerHTML += attendanceRow;
+                            // Load delegates from the selected committee
+                            db.collection(committee).get().then(querySnapshot => {
+                                querySnapshot.forEach((doc) => {
+                                    const delegate = doc.data();
+                                    let attendanceRow = `<tr>
+                                        <td>${delegate.firstName}</td>
+                                        <td>${delegate.lastName}</td>
+                                        <td>${delegate.country}</td>`;
+
+                                    // Create checkboxes for each session
+                                    for (let i = 1; i <= numberOfDays; i++) {
+                                        for (let j = 1; j <= sessionsPerDay; j++) {
+                                            const fieldName = `day${i}_${j}`;
+                                            attendanceRow += `<td><input type="checkbox" data-committee="${committee}" data-docid="${doc.id}" data-day="${fieldName}" ${delegate.attendance && delegate.attendance[fieldName] ? 'checked' : ''}></td>`;
+                                        }
+                                    }
+
+                                    attendanceRow += '</tr>';
+                                    attendanceTableBody.innerHTML += attendanceRow;
+                                });
+                            }).then(() => {
+                                loadAttendanceStatus(); // Load attendance status after adding rows
+                            }).catch((error) => {
+                                console.error('Error fetching delegates:', error);
                             });
-                        }).then(() => {
-                            loadAttendanceStatus(); // Load attendance status after adding rows
-                        }).catch((error) => {
-                            console.error('Error fetching delegates:', error);
+                        }).catch(error => {
+                            console.error('Error fetching sessionsPerDay:', error);
                         });
                     }).catch(error => {
                         console.error('Error loading conference timeline:', error);
@@ -1824,6 +1837,7 @@ function loadAttendance() {
 
 // Call the function to load attendance
 loadAttendance();
+
 
 
 
@@ -2920,12 +2934,12 @@ function updateDelegateMarkingSheet(checkbox) {
     const isChecked = checkbox.checked;
 
     const delegateRef = db.collection(committee).doc(docId);
-    
+
     delegateRef.get().then((doc) => {
         if (doc.exists) {
             const delegate = doc.data();
             const updatedData = {
-                [type]: isChecked // Update the specific field (openingSpeech or positionPaper)
+                [`marking.${type}`]: isChecked // Store the updated value under the 'marking' field
             };
 
             delegateRef.update(updatedData).then(() => {
@@ -2938,6 +2952,7 @@ function updateDelegateMarkingSheet(checkbox) {
         console.error('Error fetching delegate document:', error);
     });
 }
+
 
 
 
